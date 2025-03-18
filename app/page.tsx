@@ -14,14 +14,20 @@ const slides = [
   {
     titles: ['Casa', 'Domingo'],
     link: '#',
-    image: '/building.jpg',
+    image: '/house.jpg',
     colors: ['bg-red-500', 'bg-yellow-500', 'bg-orange-500'],
   },
 ];
 
 const titleVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: -10 },
+  hidden: { opacity: 0, y: 0 },
+  visible: { opacity: 1, y: -12 },
+};
+
+const imageVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 },
 };
 
 const slideVariants = {
@@ -50,28 +56,46 @@ export default function HomePage() {
   return (
     <div className="mx-auto h-screen w-screen overflow-hidden bg-black">
       <div className="relative h-full w-full">
-        <AnimatePresence initial={false} custom={direction}>
+        <div className="absolute inset-0">
+          <AnimatePresence mode="sync">
+            {slides.map(
+              (slide, index) =>
+                index === activeIndex && (
+                  <motion.div
+                    key={`image-${index}`}
+                    className="absolute inset-0"
+                    variants={imageVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    transition={{
+                      opacity: { duration: 1.5, ease: 'easeInOut' },
+                    }}
+                  >
+                    <Image
+                      src={slide.image}
+                      fill
+                      className="w-full object-cover brightness-40"
+                      alt="Architecture project"
+                      priority={index === 0}
+                    />
+                  </motion.div>
+                )
+            )}
+          </AnimatePresence>
+        </div>
+
+        <AnimatePresence initial={true} custom={direction} mode="wait">
           <motion.div
-            key={activeIndex}
+            key={`content-${activeIndex}`}
             custom={direction}
             variants={slideVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{
-              opacity: { duration: 1.2, ease: [0.4, 0, 0.2, 1] },
-            }}
+            transition={{ opacity: { duration: 1.2, ease: [0.4, 0, 0.2, 1] } }}
             className="absolute inset-0"
           >
-            <div className="absolute inset-0">
-              <Image
-                src={slides[activeIndex].image}
-                fill
-                className="w-full object-cover brightness-40"
-                alt="Architecture project"
-                priority={activeIndex === 0}
-              />
-            </div>
             <div className="absolute inset-0 mx-auto flex max-w-[1700px] flex-col items-start justify-center gap-4 px-6 py-2 md:gap-8">
               <div className="flex flex-col gap-2 overflow-hidden">
                 {slides[activeIndex].titles.map((title, index) => (
@@ -80,10 +104,25 @@ export default function HomePage() {
                     variants={titleVariants}
                     initial="hidden"
                     animate="visible"
-                    transition={{ delay: index * 0.2 + 0.3, duration: 0.6 }}
+                    transition={{ delay: index * 0.3 + 0.5, duration: 0.8 }}
                   >
                     <Title className="text-white">{title}</Title>
                   </motion.div>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                {slides[activeIndex].colors.map((color, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ width: 0 }}
+                    animate={{ width: '3rem' }}
+                    transition={{
+                      delay: 0.5 + index * 0.1,
+                      type: 'spring',
+                      stiffness: 50,
+                    }}
+                    className={`h-10 ${color}`}
+                  />
                 ))}
               </div>
               <motion.a
@@ -97,28 +136,9 @@ export default function HomePage() {
             </div>
           </motion.div>
         </AnimatePresence>
-        <div className="absolute inset-0 z-20 mx-auto flex flex-col gap-4 p-8">
-          {slides[activeIndex].colors.map((color, index) => (
-            <motion.div
-              key={index}
-              initial={{ width: 0 }}
-              animate={{ width: '3rem' }}
-              transition={{
-                delay: 0.5 + index * 0.1,
-                type: 'spring',
-                stiffness: 50,
-              }}
-              className={`h-10 ${color}`}
-            />
-          ))}
-        </div>
       </div>
-      <div className="absolute right-0 bottom-0 left-0 z-20 mx-auto flex w-full max-w-[1700px] items-end justify-between px-6 py-8 font-medium text-white">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
+      <div className="absolute right-0 bottom-0 left-0 z-20 mx-auto flex w-full max-w-[1700px] items-center justify-between px-6 py-8 font-medium text-white">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           Autoral, brasileira e contemporânea — projetos que traduzem identidade,
           <br />
           pertencimento e beleza em cada detalhe.
@@ -128,7 +148,7 @@ export default function HomePage() {
             <motion.button
               key={index}
               onClick={() => handleDotClick(index)}
-              className={`z-40 -mt-20 h-4 w-4 rounded-full bg-white`}
+              className={`z-40 h-4 w-4 rounded-full bg-white`}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
               animate={{
