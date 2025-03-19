@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/structure/header';
+import Footer from '@/components/structure/footer';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -21,10 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} max-w-[1700px] overflow-x-hidden antialiased transition-all duration-500 ease-in-out`}
+        className={`${inter.variable} overflow-x-hidden antialiased transition-all duration-500 ease-in-out`}
       >
         <Header />
-        {children}
+        <main className="w-full">{children}</main>
+        <Footer />
       </body>
     </html>
   );

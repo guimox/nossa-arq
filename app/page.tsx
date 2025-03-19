@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Title from '@/components/typography/title';
 import Image from 'next/image';
+import Main from '@/components/typography/main';
 
 const slides = [
   {
@@ -17,11 +18,17 @@ const slides = [
     image: '/house.jpg',
     colors: ['bg-red-500', 'bg-yellow-500', 'bg-orange-500'],
   },
+  {
+    titles: ['Edíficio', 'Céu Azul'],
+    link: '#',
+    image: '/glass.jpg',
+    colors: ['bg-red-500', 'bg-yellow-500', 'bg-orange-500'],
+  },
 ];
 
 const titleVariants = {
   hidden: { opacity: 0, y: 0 },
-  visible: { opacity: 1, y: -12 },
+  visible: { opacity: 1, y: -11 },
 };
 
 const imageVariants = {
@@ -38,15 +45,16 @@ const slideVariants = {
 
 export default function HomePage() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
+  const [direction, setDirection] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setDirection(1);
-      setActiveIndex((prev) => (prev + 1) % slides.length);
+      setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
     }, 15000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [slides.length]);
 
   const handleDotClick = (index: number) => {
     setDirection(index > activeIndex ? 1 : -1);
@@ -84,7 +92,6 @@ export default function HomePage() {
             )}
           </AnimatePresence>
         </div>
-
         <AnimatePresence initial={true} custom={direction} mode="wait">
           <motion.div
             key={`content-${activeIndex}`}
@@ -97,7 +104,7 @@ export default function HomePage() {
             className="absolute inset-0"
           >
             <div className="absolute inset-0 mx-auto flex max-w-[1700px] flex-col items-start justify-center gap-4 px-6 py-2 md:gap-8">
-              <div className="flex flex-col gap-2 overflow-hidden">
+              <div className="flex flex-col overflow-hidden">
                 {slides[activeIndex].titles.map((title, index) => (
                   <motion.div
                     key={index}
@@ -106,7 +113,7 @@ export default function HomePage() {
                     animate="visible"
                     transition={{ delay: index * 0.3 + 0.5, duration: 0.8 }}
                   >
-                    <Title className="text-white">{title}</Title>
+                    <Main className="text-white">{title}</Main>
                   </motion.div>
                 ))}
               </div>
@@ -114,22 +121,23 @@ export default function HomePage() {
                 {slides[activeIndex].colors.map((color, index) => (
                   <motion.div
                     key={index}
-                    initial={{ width: 0 }}
-                    animate={{ width: '3rem' }}
+                    initial={{ height: 0 }}
+                    animate={{ height: '3rem' }}
                     transition={{
                       delay: 0.5 + index * 0.1,
                       type: 'spring',
                       stiffness: 50,
                     }}
-                    className={`h-10 ${color}`}
+                    className={`h-[3rem] w-[3rem] ${color}`}
                   />
                 ))}
               </div>
               <motion.a
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                whileHover={{ opacity: 0.5 }}
                 transition={{ delay: 0.8 }}
-                className="text-white underline underline-offset-4 hover:cursor-pointer"
+                className="text-white underline underline-offset-4 hover:cursor-pointer hover:opacity-50"
               >
                 Ver projeto
               </motion.a>
@@ -138,7 +146,11 @@ export default function HomePage() {
         </AnimatePresence>
       </div>
       <div className="absolute right-0 bottom-0 left-0 z-20 mx-auto flex w-full max-w-[1700px] items-center justify-between px-6 py-8 font-medium text-white">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="border-b border-l p-6"
+        >
           Autoral, brasileira e contemporânea — projetos que traduzem identidade,
           <br />
           pertencimento e beleza em cada detalhe.
@@ -148,7 +160,7 @@ export default function HomePage() {
             <motion.button
               key={index}
               onClick={() => handleDotClick(index)}
-              className={`z-40 h-4 w-4 rounded-full bg-white`}
+              className={`z-40 h-4 w-4 cursor-pointer bg-white hover:opacity-50`}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
               animate={{
