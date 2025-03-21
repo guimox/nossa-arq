@@ -123,7 +123,7 @@
 }
 
 .content-grid {
-  --padding-inline: 7rem;
+  --padding-inline: 1rem;
   --content-max-width: 1700px;
   --breakout-max-width: 1900px;
 
@@ -159,18 +159,4 @@ img.full-width {
   width: 100%;
   max-height: 45vh;
   object-fit: cover;
-}
-
-.content-grid > .left-bleed {
-  grid-column: full-width-start / content-start;
-}
-
-.content-grid > .right-bleed {
-  grid-column: content-end / full-width-end;
-}
-
-/* Optional: Ensure bleed elements fill their grid space */
-.content-grid > .left-bleed,
-.content-grid > .right-bleed {
-  width: 100%;
 }

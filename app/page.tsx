@@ -103,7 +103,7 @@ export default function HomePage() {
             transition={{ opacity: { duration: 1.2, ease: [0.4, 0, 0.2, 1] } }}
             className="absolute inset-0"
           >
-            <div className="absolute inset-0 mx-auto flex max-w-[1700px] flex-col items-start justify-center gap-4 px-6 py-2 md:gap-8">
+            <div className="absolute inset-0 mx-auto flex max-w-[1700px] flex-col items-start justify-center gap-4 py-2 md:gap-8">
               <div className="flex flex-col overflow-hidden">
                 {slides[activeIndex].titles.map((title, index) => (
                   <motion.div
@@ -137,7 +137,7 @@ export default function HomePage() {
                 animate={{ opacity: 1 }}
                 whileHover={{ opacity: 0.5 }}
                 transition={{ delay: 0.8 }}
-                className="text-white underline underline-offset-4 hover:cursor-pointer hover:opacity-50"
+                className="text-white underline underline-offset-8 hover:cursor-pointer hover:opacity-50"
               >
                 Ver projeto
               </motion.a>
@@ -145,10 +145,11 @@ export default function HomePage() {
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className="absolute right-0 bottom-0 left-0 z-20 mx-auto flex w-full max-w-[1700px] items-center justify-between px-6 py-8 font-medium text-white">
+      <div className="absolute right-0 bottom-0 left-0 z-20 mx-auto flex w-full max-w-[1700px] items-center justify-between py-8 font-medium text-white">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
           className="border-b border-l p-6"
         >
           Autoral, brasileira e contemporânea — projetos que traduzem identidade,
@@ -159,6 +160,8 @@ export default function HomePage() {
           {slides.map((slide, index) => (
             <motion.button
               key={index}
+              initial={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
               onClick={() => handleDotClick(index)}
               className={`z-40 h-4 w-4 cursor-pointer bg-white hover:opacity-50`}
               whileHover={{ scale: 1.2 }}

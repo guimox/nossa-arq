@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/structure/header';
 import Footer from '@/components/structure/footer';
+import CustomCursor from '@/components/structure/cursor-custom';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={`${inter.variable} overflow-x-hidden antialiased transition-all duration-500 ease-in-out`}
       >
         <Header />
+        <CustomCursor />
         <main className="w-full">{children}</main>
         <Footer />
       </body>
