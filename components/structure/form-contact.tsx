@@ -1,8 +1,4 @@
 'use client';
-import React, { useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -14,10 +10,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import Heading from '@/components/structure/heading';
-import Main from '@/components/typography/main';
-import Subtitle from '@/components/typography/subtitle';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Turnstile, { useTurnstile } from 'react-turnstile';
+import * as z from 'zod';
 
 const formSchema = z.object({
   name: z.string().min(2, {

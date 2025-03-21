@@ -1,9 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Title from '@/components/typography/title';
-import Image from 'next/image';
 import Main from '@/components/typography/main';
+import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 const slides = [
   {
