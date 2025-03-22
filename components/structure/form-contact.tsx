@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Turnstile, { useTurnstile } from 'react-turnstile';
 import * as z from 'zod';
@@ -47,10 +47,9 @@ export default function FormContact(): React.ReactElement {
     message: '',
     visible: false,
   });
-  const turnstileRef = useRef<any>(null);
+
   const turnstile = useTurnstile();
 
-  // Initialize form with React Hook Form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,10 +74,6 @@ export default function FormContact(): React.ReactElement {
 
       // Reset form and show success message
       form.reset();
-      // Reset Turnstile widget if using the actual component
-      if (turnstileRef.current && turnstileRef.current.reset) {
-        turnstileRef.current.reset();
-      }
 
       setFormStatus({
         success: true,
@@ -196,7 +191,7 @@ export default function FormContact(): React.ReactElement {
                     >
                       <Turnstile
                         sitekey="1x00000000000000000000AA"
-                        onVerify={(token: any) => {
+                        onVerify={(token: string) => {
                           fetch('/login', {
                             method: 'POST',
                             body: JSON.stringify({ token }),

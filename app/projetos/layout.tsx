@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import '../globals.css';
 import Header from '@/components/structure/header';
 import Footer from '@/components/structure/footer';
 import CustomCursor from '@/components/structure/cursor-custom';
@@ -28,7 +28,9 @@ export default function RootLayout({
       >
         <Header />
         <CustomCursor />
-        <main className="w-full">{children}</main>
+        <main className="w-full">
+          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+        </main>
         <Footer />
       </body>
     </html>
