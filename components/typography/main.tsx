@@ -9,7 +9,7 @@ export default function Main({ children, className }: MainProps) {
   return (
     <h1
       className={clsx(
-        'scroll-m-20 text-4xl font-light tracking-tight lg:text-8xl',
+        'scroll-m-20 text-5xl font-light tracking-tight md:text-8xl',
         className
       )}
     >

@@ -4,8 +4,8 @@ const Footer = () => {
   const linkStyle = `font-medium transition-opacity hover:cursor-pointer hover:opacity-50`;
 
   return (
-    <footer className="content-grid mt-12 w-full border-t text-zinc-700 md:mt-20 lg:mt-40">
-      <div className="content-grid mx-auto px-4 md:px-6">
+    <footer className="mt-12 w-full border-t text-zinc-700 md:mt-20 lg:mt-40">
+      <div className="mx-auto px-4 md:px-6">
         <div className="flex flex-col py-8 md:py-10 lg:flex-row lg:justify-between">
           <div className="mb-8 w-full lg:mb-0 lg:max-w-2xl">
             <div className="mb-4 text-xl font-bold text-zinc-700">
@@ -82,7 +82,7 @@ const Footer = () => {
         </div>
 
         <div className="py-4 text-sm">
-          <div className="flex flex-col items-center space-y-3 sm:flex-row sm:justify-between sm:space-y-0">
+          <div className="flex flex-col items-start space-y-3 sm:flex-row sm:justify-between sm:space-y-0 md:items-center">
             <p>
               © {new Date().getFullYear()} Nossa Arquitetura. Todos os direitos
               reservados.
