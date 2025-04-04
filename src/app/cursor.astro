@@ -1,0 +1,25 @@
+---
+const isHomePage = Astro.url.pathname === '/';
+const circleColor = isHomePage ? 'border-white' : 'border-zinc-500';
+---
+
+<div
+  class={`custom-cursor ${circleColor} pointer-events-none fixed top-0 left-0 z-20 h-10 w-10 rounded-full border transition-transform duration-75`}
+>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cursor = document.querySelector('.custom-cursor') as HTMLElement;
+
+    if (cursor) {
+      const moveCursor = (e: MouseEvent) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        cursor.style.transform = `translate(${x - 12}px, ${y - 12}px)`;
+      };
+
+      window.addEventListener('mousemove', moveCursor);
+    }
+  });
+</script>

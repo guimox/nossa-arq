@@ -1,0 +1,11 @@
+---
+export interface Props {
+  class?: string;
+}
+
+const { class: clas } = Astro.props;
+---
+
+<h3 class={`scroll-m-20 text-lg tracking-tight md:text-3xl ${clas ?? ''}`}>
+  <slot />
+</h3>

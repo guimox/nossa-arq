@@ -1,0 +1,135 @@
+---
+import Heading from '../../app/heading.astro';
+import CardArq from '../../components/sections/card-arq.astro';
+import Subtitle from '../../components/typography/subtitle.astro';
+import Title from '../../components/typography/title.astro';
+import Layout from '../../layout/layout.astro';
+
+export function getStaticPaths() {
+  const itemsArq = [
+    {
+      title: 'Edíficio Roberto Carlos',
+      subtitle: 'Aconchego, visão, design',
+      image: 'building.jpg',
+      tags: ['Residenciais', 'Urbanos'],
+    },
+    {
+      title: 'Mansão Vista Mar',
+      subtitle: 'Elegância à beira-mar',
+      image: 'building.jpg',
+      tags: ['Residenciais', 'Interiores'],
+    },
+    {
+      title: 'Parque Central',
+      subtitle: 'Espaço urbano revitalizado',
+      image: 'building.jpg',
+      tags: ['Urbanos'],
+    },
+    {
+      title: 'Apartamento Moderno',
+      subtitle: 'Minimalismo e funcionalidade',
+      image: 'building.jpg',
+      tags: ['Residenciais', 'Interiores'],
+    },
+    {
+      title: 'Centro Comercial Luz',
+      subtitle: 'Inovação em espaços comerciais',
+      image: 'building.jpg',
+      tags: ['Edifícios', 'Urbanos'],
+    },
+    {
+      title: 'Casa Vila Verde',
+      subtitle: 'Sustentabilidade e conforto',
+      image: 'building.jpg',
+      tags: ['Residenciais'],
+    },
+  ];
+
+  const uniqueTags = Array.from(new Set(itemsArq.flatMap((item) => item.tags)));
+
+  const allTags = ['Todos', ...uniqueTags];
+
+  return [
+    { params: { tag: undefined }, props: { itemsArq } },
+    ...allTags.map((tag) => ({
+      params: { tag: tag.toLowerCase() },
+      props: { itemsArq },
+    })),
+  ];
+}
+
+const { tag } = Astro.params;
+const { itemsArq } = Astro.props;
+
+const allTags = [
+  'Todos',
+  ...Array.from(new Set(itemsArq.flatMap((item) => item.tags))),
+];
+
+const filteredItems =
+  !tag || tag === 'todos'
+    ? itemsArq
+    : itemsArq.filter((item) =>
+        item.tags.some((itemTag) => itemTag.toLowerCase() === tag)
+      );
+
+const allTagsFormatted = allTags.map((tag) => ({
+  name: tag,
+  path: tag === 'Todos' ? '/projetos' : `/projetos/${tag.toLowerCase()}`,
+}));
+
+const activeTag = tag || 'todos';
+---
+
+<Layout>
+  <section
+    class="content-grid max-w-[1700px] mx-auto mt-10 space-y-12 px-4 py-10 text-zinc-700 md:mt-20 md:space-y-20 md:px-6 md:py-20 lg:px-0"
+  >
+    <div class="flex flex-col items-center space-y-4 text-center">
+      <div class="flex items-center gap-4">
+        <div class="h-12 w-12 bg-red-500 animate-colorBlock"></div>
+        <div class="h-12 w-12 bg-orange-700 animate-colorBlock"></div>
+      </div>
+      <Heading class="animate-fadeIn">
+        <Title class="text-2xl font-bold">Projetos</Title>
+        <Subtitle class="text-lg">Feitos de forma única</Subtitle>
+      </Heading>
+      <ul
+        class="mt-6 flex flex-wrap items-center justify-center gap-3 md:gap-4 animate-fadeIn"
+      >
+        {
+          allTagsFormatted.map((tagItem) => (
+            <li>
+              <a
+                href={tagItem.path}
+                class={`inline-flex items-center rounded px-3 py-1 text-sm transition-all duration-300 hover:cursor-pointer ${
+                  (tagItem.name === 'Todos' && !tag) ||
+                  tagItem.name.toLowerCase() === activeTag
+                    ? 'bg-zinc-800 text-white'
+                    : 'border border-zinc-200 bg-white hover:bg-zinc-100'
+                }`}
+              >
+                {tagItem.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <section
+      class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 animate-staggeredFadeIn"
+    >
+      {
+        filteredItems.map((item) => (
+          <CardArq
+            image={item.image}
+            title={item.title}
+            subtitle={item.subtitle}
+            tags={item.tags}
+          />
+        ))
+      }
+    </section>
+  </section>
+</Layout>

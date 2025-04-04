@@ -1,0 +1,28 @@
+---
+import Cursor from '../app/cursor.astro';
+import Header from '../app/header.astro';
+import Footer from '../app/footer.astro';
+import '../styles/global.css';
+
+const isHomePage = Astro.url.pathname === '/';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Nossa Arquitetura</title>
+  </head>
+  <body
+    class={`overflow-x-hidden antialiased transition-all duration-500 ease-in-out`}
+  >
+    <Header />
+    <Cursor />
+    <main class="w-full py-4 sm:py-10">
+      <slot />
+    </main>
+    {!isHomePage && <Footer />}
+  </body>
+</html>

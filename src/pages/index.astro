@@ -1,0 +1,260 @@
+---
+import { Image } from 'astro:assets';
+import { cx } from 'class-variance-authority';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
+import { getPlaiceholder } from 'plaiceholder';
+import firstImage from '../assets/building.jpg';
+import secondImage from '../assets/glass.jpg';
+import thirdImage from '../assets/house.jpg';
+import Layout from '../layout/layout.astro';
+import Paragraph from '../components/typography/paragraph.astro';
+
+const slides = [
+  {
+    titles: ['Apartamento', 'Fernanda Torres'],
+    link: '#',
+    image: firstImage,
+  },
+  {
+    titles: ['Casa', 'Domingo'],
+    link: '#',
+    image: thirdImage,
+  },
+  {
+    titles: ['Edifício', 'Céu Azul'],
+    link: '#',
+    image: secondImage,
+  },
+];
+
+// Get plaiceholder data for the first image
+const getLocalImageWithPlaiceholder = async (relativePath: string) => {
+  const absolutePath = join(process.cwd(), 'src/assets', relativePath);
+  const buffer = await readFile(absolutePath);
+
+  const {
+    metadata: { height, width },
+    ...plaiceholder
+  } = await getPlaiceholder(buffer, { size: 10 });
+
+  return {
+    ...plaiceholder,
+    img: { src: firstImage, height, width },
+  };
+};
+
+const { css, img } = await getLocalImageWithPlaiceholder('building.jpg');
+---
+
+<Layout>
+  <section class="overflow-hidden relative" data-slideshow-container>
+    <!-- Plaiceholder blur background -->
+    <div
+      style={css}
+      class={cx(
+        'absolute',
+        'inset-0',
+        'w-full',
+        'h-full',
+        'transform',
+        'brightness-50',
+        'scale-150',
+        'filter',
+        'blur-2xl',
+        'z-[-1]'
+      )}
+    >
+    </div>
+
+    <!-- Slide Images -->
+    <div id="slideImages" class="relative h-screen">
+      {
+        slides.map((slide, index) => (
+          <div
+            class={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+              index === 0 ? 'opacity-100' : 'opacity-0'
+            }`}
+            data-index={index}
+          >
+            {index === 0 ? (
+              <Image
+                {...img}
+                alt={slide.titles.join(' ')}
+                title={slide.titles[0]}
+                class="w-full h-screen object-cover brightness-40"
+              />
+            ) : (
+              <Image
+                src={slide.image}
+                alt={slide.titles.join(' ')}
+                title={slide.titles[0]}
+                class="w-full h-screen object-cover brightness-40"
+              />
+            )}
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Slide Titles -->
+    <div
+      class="absolute inset-0 mx-auto flex max-w-[1700px] flex-col items-start justify-center gap-4 px-[1rem] py-2 md:gap-4 lg:px-0 z-10"
+      id="slideTitles"
+    >
+      {
+        slides.map((slide, index) => (
+          <div
+            class={`transition-opacity space-y-5 duration-700 ease-in-out ${index === 0 ? 'opacity-100 relative' : 'opacity-0 absolute invisible'}`}
+            data-index={index}
+          >
+            <div class="space-y-2">
+              {slide.titles.map((title) => (
+                <h2 class="text-white text-7xl lg:text-8xl font-bold">{title}</h2>
+              ))}
+            </div>
+            <a
+              href={slide.link}
+              class="inline-block text-white underline underline-offset-8 hover:opacity-75 transition-opacity"
+            >
+              Ver projeto
+            </a>
+          </div>
+        ))
+      }
+    </div>
+    <div
+      class="absolute right-0 bottom-0 left-0 z-20 mx-auto flex w-full max-w-[1700px] flex-col-reverse items-start justify-between gap-10 px-[1rem] py-8 font-medium text-white md:flex-row md:items-center lg:px-0"
+    >
+      <Paragraph class="text-sm md:text-base max-w-2xl border-l border-b p-8">
+        Autoral, brasileira e contemporânea — projetos que traduzem identidade,
+        pertencimento e beleza em cada detalhe.
+      </Paragraph>
+      <div class="flex gap-2 sm:gap-3 md:gap-4" id="slideButtons">
+        {
+          slides.map((slide, index) => (
+            <button
+              class={`h-5 w-5 md:h-6 md:w-6 cursor-pointer rounded transition-all duration-300 bg-white ${index === 0 ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}
+              data-index={index}
+              aria-label={`Ver slide ${index + 1}: ${slide.titles.join(' ')}`}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const slideImages = document.querySelectorAll('#slideImages [data-index]');
+    const slideTitles = document.querySelectorAll('#slideTitles [data-index]');
+    const slideButtons = document.querySelectorAll('#slideButtons [data-index]');
+    const slideshowContainer = document.querySelector('[data-slideshow-container]');
+
+    if (
+      !slideImages.length ||
+      !slideTitles.length ||
+      !slideButtons.length ||
+      !slideshowContainer
+    ) {
+      console.error('Slideshow elements not found!');
+      return;
+    }
+
+    const totalSlides = slideImages.length;
+    let currentSlide = 0;
+    let slideInterval: ReturnType<typeof setInterval>;
+
+    const showSlide = (index: number) => {
+      const newIndex = Math.max(0, Math.min(index, totalSlides - 1));
+
+      if (newIndex === currentSlide && slideInterval) return;
+
+      slideImages.forEach((img, i) => {
+        const imgEl = img as HTMLElement;
+        if (i === newIndex) {
+          imgEl.classList.remove('opacity-0');
+          imgEl.classList.add('opacity-100');
+        } else {
+          imgEl.classList.remove('opacity-100');
+          imgEl.classList.add('opacity-0');
+        }
+      });
+
+      slideTitles.forEach((titleDiv, i) => {
+        const titleEl = titleDiv as HTMLElement;
+        if (i === newIndex) {
+          titleEl.classList.remove('opacity-0', 'absolute', 'invisible');
+          titleEl.classList.add('opacity-100', 'relative');
+        } else {
+          titleEl.classList.remove('opacity-100', 'relative');
+          titleEl.classList.add('opacity-0', 'absolute', 'invisible');
+        }
+      });
+
+      slideButtons.forEach((button, i) => {
+        const btnEl = button as HTMLElement;
+        if (i === newIndex) {
+          btnEl.classList.remove('opacity-50', 'hover:opacity-75');
+          btnEl.classList.add('opacity-100', 'scale-110');
+          btnEl.setAttribute('aria-current', 'true');
+        } else {
+          btnEl.classList.remove('opacity-100', 'scale-110');
+          btnEl.classList.add('opacity-50', 'hover:opacity-75');
+          btnEl.removeAttribute('aria-current');
+        }
+      });
+
+      currentSlide = newIndex;
+    };
+
+    const nextSlide = () => {
+      const next = (currentSlide + 1) % totalSlides;
+      showSlide(next);
+    };
+
+    slideButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const indexAttr = button.getAttribute('data-index');
+        if (indexAttr === null) return;
+        const index = parseInt(indexAttr, 10);
+        if (isNaN(index)) return;
+
+        showSlide(index);
+
+        if (slideInterval) {
+          clearInterval(slideInterval);
+          startAutoSlide();
+        }
+      });
+    });
+
+    const startAutoSlide = () => {
+      if (slideInterval) {
+        clearInterval(slideInterval);
+      }
+      slideInterval = setInterval(nextSlide, 5000);
+    };
+
+    const stopAutoSlide = () => {
+      if (slideInterval) {
+        clearInterval(slideInterval);
+      }
+    };
+
+    slideshowContainer.addEventListener('mouseenter', stopAutoSlide);
+    slideshowContainer.addEventListener('mouseleave', startAutoSlide);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopAutoSlide();
+      } else {
+        startAutoSlide();
+      }
+    });
+
+    showSlide(0);
+    startAutoSlide();
+  });
+</script>

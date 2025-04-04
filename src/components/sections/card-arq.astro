@@ -1,0 +1,161 @@
+---
+import type { ImageMetadata } from 'astro';
+import { getImage, Image } from 'astro:assets';
+import Paragraph from '../typography/paragraph.astro';
+
+interface Props {
+  image: string;
+  title: string;
+  subtitle: string;
+  tags?: string[];
+  link: string;
+}
+
+const { image, title, subtitle, string, tags = [] } = Astro.props;
+
+const allImages = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/*.{jpg,jpeg,png,gif,webp,svg}'
+);
+
+const imagePathKey = `/src/assets/${image}`;
+
+if (!allImages[imagePathKey]) {
+  throw new Error(
+    `Image "${image}" not found in src/assets/. Full path check: ${imagePathKey}`
+  );
+}
+
+const imageModule = await allImages[imagePathKey]();
+const importedImageSrc = imageModule.default;
+
+const optimizedImage = await getImage({
+  src: importedImageSrc,
+  widths: [800, 1200, 1600],
+});
+---
+
+<div
+  class="card-arq hover:cursor-pointer group relative flex h-full flex-col rounded overflow-hidden bg-white hover:border"
+>
+  <div class="relative aspect-[4/2] w-full overflow-hidden">
+    <div class="image-container h-full w-full">
+      <Image
+        src={optimizedImage.src}
+        width={optimizedImage.attributes.width}
+        height={optimizedImage.attributes.height}
+        alt={title}
+        class="h-full w-full object-cover transition-all duration-700 ease-in-out"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <div
+      class="pointer-events-none absolute inset-0 bg-zinc-700 opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-20"
+    >
+    </div>
+  </div>
+  <div class="flex flex-col gap-2 p-5">
+    <Paragraph class="transition-colors duration-300 group-hover:text-zinc-900"
+      >{title}</Paragraph
+    >
+    <Paragraph class="text-zinc-500">{subtitle}</Paragraph>
+    {
+      tags.length > 0 && (
+        <div class="mt-2 flex flex-wrap gap-2 tag-container">
+          {tags.map((tag) => (
+            <span class="tag inline-flex items-center rounded bg-zinc-100 px-3 py-1 text-xs text-zinc-600">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )
+    }
+  </div>
+  <div
+    class="accent-line absolute bottom-0 left-0 h-1 w-0 bg-zinc-800 transition-all duration-300 ease-out group-hover:w-full"
+  >
+  </div>
+</div>
+
+<style>
+  .card-arq {
+    transition: transform 0.4s ease-out;
+  }
+
+  .card-arq:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-arq:hover img {
+    transform: scale(1.05);
+    filter: brightness(0.85);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .tag-container {
+    perspective: 1000px;
+  }
+
+  .tag {
+    animation: fadeIn 0.3s ease-out forwards;
+    animation-fill-mode: both;
+  }
+
+  .tag:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .tag:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .tag:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+  .tag:nth-child(4) {
+    animation-delay: 0.2s;
+  }
+  .tag:nth-child(5) {
+    animation-delay: 0.25s;
+  }
+</style>
+
+<script>
+  const observeTagChanges = () => {
+    const tagContainers = document.querySelectorAll('.tag-container');
+
+    tagContainers.forEach((container) => {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            mutation.addedNodes.forEach((node, index) => {
+              if (node.nodeType === 1) {
+                const element = node as HTMLElement;
+                element.classList.remove('tag');
+                void element.offsetWidth;
+                element.classList.add('tag');
+                element.style.animationDelay = `${0.05 * (index + 1)}s`;
+              }
+            });
+          }
+        });
+      });
+
+      observer.observe(container, {
+        childList: true,
+        subtree: true,
+      });
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', observeTagChanges);
+  document.addEventListener('astro:page-load', observeTagChanges);
+</script>

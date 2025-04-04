@@ -1,0 +1,11 @@
+---
+export interface Props {
+  class?: string;
+}
+
+const { class: clas } = Astro.props;
+---
+
+<div class={`space-y-4 py-4 sm:py-6${clas ?? ''}`}>
+  <slot />
+</div>

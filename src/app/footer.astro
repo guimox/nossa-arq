@@ -1,0 +1,83 @@
+---
+import Paragraph from '../components/typography/paragraph.astro';
+
+const linkStyle = `text-zinc-500 transition-opacity hover:cursor-pointer hover:opacity-50`;
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="mt-12 w-full border-t text-zinc-300 md:mt-20 lg:mt-40">
+  <div class="mx-auto max-w-[1700px] px-6">
+    <div class="flex flex-col py-8 md:py-10 lg:flex-row lg:justify-between">
+      <div class="mb-8 w-full lg:mb-0 lg:max-w-2xl">
+        <div class="mb-4 text-xl font-bold text-zinc-700">Nossa Arquitetura</div>
+        <Paragraph class="text-zinc-500">
+          Transformando espaços com design inovador e sustentável para criar
+          ambientes que inspiram.
+        </Paragraph>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:gap-8 lg:gap-12">
+        <div>
+          <h3 class="mb-3 text-lg font-bold text-zinc-700">Navegação</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="/" class={linkStyle}> Início </a>
+            </li>
+            <li>
+              <a href="/sobre" class={linkStyle}> Sobre </a>
+            </li>
+            <li>
+              <a href="/projetos" class={linkStyle}> Projetos </a>
+            </li>
+            <li>
+              <a href="/contato" class={linkStyle}> Contato </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="mb-3 text-lg font-bold text-zinc-700">Serviços</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="/servicos/residencial" class={linkStyle}> Residencial </a>
+            </li>
+            <li>
+              <a href="/servicos/comercial" class={linkStyle}> Comercial </a>
+            </li>
+            <li>
+              <a href="/servicos/interiores" class={linkStyle}>
+                Design de Interiores
+              </a>
+            </li>
+            <li>
+              <a href="/servicos/paisagismo" class={linkStyle}> Paisagismo </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-span-2 mt-6 sm:col-span-1 sm:mt-0">
+          <h3 class="mb-3 text-lg font-bold text-zinc-700">Contato</h3>
+          <ul class="space-y-2">
+            <li class="text-zinc-500">contato@nossaarquitetura.com</li>
+            <li class="text-zinc-500">+55 (11) 9999-9999</li>
+            <li class="text-zinc-500">São Paulo, SP - Brasil</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-4 text-sm">
+      <div
+        class="flex text-zinc-500 flex-col items-start space-y-3 sm:flex-row sm:justify-between sm:space-y-0 md:items-center"
+      >
+        <Paragraph>
+          © {currentYear} Nossa Arquitetura. Todos os direitos reservados.
+        </Paragraph>
+        <div class="flex space-x-4 sm:space-x-6">
+          <a href="/privacidade" class={linkStyle}> Política de Privacidade </a>
+          <a href="/termos" class={linkStyle}> Termos de Uso </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

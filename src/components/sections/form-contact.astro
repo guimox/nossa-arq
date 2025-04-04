@@ -1,0 +1,226 @@
+---
+import { z } from 'zod';
+import Paragraph from '../typography/paragraph.astro';
+
+const formSchema = z.object({
+  name: z.string().min(2, { message: 'O nome deve ter pelo menos 2 caracteres.' }),
+  email: z.string().email({ message: 'Por favor, insira um email válido.' }),
+  phone: z
+    .string()
+    .min(8, { message: 'O telefone deve ter pelo menos 8 caracteres.' }),
+  projectType: z.enum(['edificio', 'interiores', 'particular', ''], {
+    message: 'Por favor, selecione um tipo de projeto.',
+  }),
+  message: z
+    .string()
+    .min(10, { message: 'A mensagem deve ter pelo menos 10 caracteres.' }),
+});
+
+type FormData = z.infer<typeof formSchema>;
+let errors: Partial<Record<keyof FormData, string>> = {};
+let formData: FormData = {
+  name: '',
+  email: '',
+  phone: '',
+  projectType: '',
+  message: '',
+};
+let formStatus = { success: false, message: '', visible: false };
+
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.formData();
+    const formValues = {
+      name: data.get('name')?.toString() || '',
+      email: data.get('email')?.toString() || '',
+      phone: data.get('phone')?.toString() || '',
+      projectType: (data.get('projectType')?.toString() || 'edificio') as
+        | 'edificio'
+        | 'interiores'
+        | 'particular',
+      message: data.get('message')?.toString() || '',
+    };
+
+    const result = formSchema.safeParse(formValues);
+
+    if (result.success) {
+      formData = result.data;
+      console.log('Dados do formulário enviados com sucesso:', formData);
+
+      formStatus = {
+        success: true,
+        message: 'Obrigado pelo seu contato. Responderemos em breve.',
+        visible: true,
+      };
+
+      // Clear form data
+      formData = {
+        name: '',
+        email: '',
+        phone: '',
+        projectType: 'edificio',
+        message: '',
+      };
+    } else {
+      formData = formValues;
+      errors = {};
+
+      result.error.issues.forEach((issue) => {
+        if (issue.path[0]) {
+          errors[issue.path[0] as keyof FormData] = issue.message;
+        }
+      });
+
+      formStatus = {
+        success: false,
+        message: 'Por favor, corrija os erros abaixo.',
+        visible: true,
+      };
+    }
+  } catch (error) {
+    console.error('Erro ao processar formulário:', error);
+    formStatus = {
+      success: false,
+      message:
+        'Houve um problema ao enviar o formulário. Por favor, tente novamente mais tarde.',
+      visible: true,
+    };
+  }
+}
+---
+
+<div class="w-full max-w-2xl rounded">
+  {
+    formStatus.visible && (
+      <div
+        class={`p-4 mb-6 rounded-md border ${formStatus.success ? 'bg-green-50 text-green-800 border-green-200' : 'bg-red-50 text-red-800 border-red-200'}`}
+      >
+        <Paragraph>{formStatus.message}</Paragraph>
+      </div>
+    )
+  }
+
+  <form method="POST" enctype="application/x-www-form-urlencoded" class="space-y-6">
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
+        >Nome</label
+      >
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="Seu nome completo"
+        value={formData.name}
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
+      />
+      {
+        errors.name && (
+          <Paragraph class="mt-1 text-sm text-red-600">{errors.name}</Paragraph>
+        )
+      }
+    </div>
+
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700 mb-1"
+        >Email</label
+      >
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="seu.email@exemplo.com"
+        value={formData.email}
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
+      />
+      {
+        errors.email && (
+          <Paragraph class="mt-1 text-sm text-red-600">{errors.email}</Paragraph>
+        )
+      }
+    </div>
+
+    <div>
+      <label for="phone" class="block text-sm font-medium text-gray-700 mb-1"
+        >Telefone</label
+      >
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        placeholder="(00) 00000-0000"
+        value={formData.phone}
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
+      />
+      {
+        errors.phone && (
+          <Paragraph class="mt-1 text-sm text-red-600">{errors.phone}</Paragraph>
+        )
+      }
+    </div>
+
+    <div>
+      <label for="projectType" class="block text-sm font-medium text-gray-700 mb-1"
+        >Tipo de Projeto</label
+      >
+      <select
+        id="projectType"
+        name="projectType"
+        required
+        class="w-full px-3 py-2 border invalid:text-[#9e9eae] border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500"
+      >
+        <option value="" disabled selected hidden>Selecione</option>
+        <option
+          value="edificio"
+          class="text-gray-500"
+          selected={formData.projectType === 'edificio'}>Edifício</option
+        >
+        <option
+          value="interiores"
+          class="text-gray-500"
+          selected={formData.projectType === 'interiores'}>Interiores</option
+        >
+        <option
+          value="particular"
+          class="text-gray-500"
+          selected={formData.projectType === 'particular'}>Particular</option
+        >
+      </select>
+      {
+        errors.projectType && (
+          <Paragraph class="mt-1 text-sm text-red-600">
+            {errors.projectType}
+          </Paragraph>
+        )
+      }
+    </div>
+
+    <div>
+      <label for="message" class="block text-sm font-medium text-gray-700 mb-1"
+        >Mensagem</label
+      >
+      <textarea
+        id="message"
+        name="message"
+        placeholder="Digite sua mensagem aqui"
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 min-h-32"
+        >{formData.message}</textarea
+      >
+      {
+        errors.message && (
+          <Paragraph class="mt-1 text-sm text-red-600">{errors.message}</Paragraph>
+        )
+      }
+    </div>
+
+    <button
+      type="submit"
+      class="w-fit py-1 px-4 bg-zinc-800 hover:opacit-50 text-white font-medium rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+    >
+      Enviar
+    </button>
+  </form>
+</div>
