@@ -28,7 +28,6 @@ const slides = [
   },
 ];
 
-// Get plaiceholder data for the first image
 const getLocalImageWithPlaiceholder = async (relativePath: string) => {
   const absolutePath = join(process.cwd(), 'src/assets', relativePath);
   const buffer = await readFile(absolutePath);
@@ -49,7 +48,6 @@ const { css, img } = await getLocalImageWithPlaiceholder('building.jpg');
 
 <Layout>
   <section class="overflow-hidden relative" data-slideshow-container>
-    <!-- Plaiceholder blur background -->
     <div
       style={css}
       class={cx(

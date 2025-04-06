@@ -1,0 +1,120 @@
+/* Base animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Content grid animation */
+.content-grid {
+  opacity: 1;
+}
+
+/* Header section animations */
+.content-grid h1,
+.content-grid h3 {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.content-grid h1 {
+  animation-delay: 0.2s;
+}
+
+.content-grid h3 {
+  animation-delay: 0.4s;
+}
+
+/* Shape animations */
+.flex.items-center.gap-4 .h-\[3rem\].w-\[3rem\].bg-red-500 {
+  opacity: 0;
+  animation: scaleIn 0.6s ease-out forwards;
+  animation-delay: 0.6s, 1.2s;
+}
+
+.flex.items-center.gap-4 .h-\[3rem\].w-\[3rem\].bg-orange-700 {
+  opacity: 0;
+  animation:
+    scaleIn 0.6s ease-out forwards,
+    floatShape 3s ease-in-out infinite 0.5s;
+  animation-delay: 0.8s, 1.4s;
+}
+
+/* Grid content animations */
+.grid.grid-cols-1 > div {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.grid.grid-cols-1 > div:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.grid.grid-cols-1 > div:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.grid.grid-cols-1 > div:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+/* Full-width section animations */
+.full-width img {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+.full-width p {
+  opacity: 0;
+  animation: fadeInLeft 0.8s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+/* Orange background section animations */
+.bg-orange-700 h1,
+.bg-orange-700 h2 {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.bg-orange-700 h1 {
+  animation-delay: 0.2s;
+}
+
+.bg-orange-700 h2 {
+  animation-delay: 0.4s;
+}
+
+.bg-orange-700 p {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+  animation-delay: 0.6s;
+}
