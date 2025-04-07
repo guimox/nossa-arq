@@ -4,56 +4,24 @@ import CardArq from '../../components/sections/card-arq.astro';
 import Subtitle from '../../components/typography/subtitle.astro';
 import Title from '../../components/typography/title.astro';
 import Layout from '../../layout/layout.astro';
+import { itemsArq as itemsArqData } from '../../constants/items';
 
 export function getStaticPaths() {
-  const itemsArq = [
-    {
-      title: 'Edíficio Roberto Carlos',
-      subtitle: 'Aconchego, visão, design',
-      image: 'building.jpg',
-      tags: ['Residenciais', 'Urbanos'],
-    },
-    {
-      title: 'Mansão Vista Mar',
-      subtitle: 'Elegância à beira-mar',
-      image: 'building.jpg',
-      tags: ['Residenciais', 'Interiores'],
-    },
-    {
-      title: 'Parque Central',
-      subtitle: 'Espaço urbano revitalizado',
-      image: 'building.jpg',
-      tags: ['Urbanos'],
-    },
-    {
-      title: 'Apartamento Moderno',
-      subtitle: 'Minimalismo e funcionalidade',
-      image: 'building.jpg',
-      tags: ['Residenciais', 'Interiores'],
-    },
-    {
-      title: 'Centro Comercial Luz',
-      subtitle: 'Inovação em espaços comerciais',
-      image: 'building.jpg',
-      tags: ['Edifícios', 'Urbanos'],
-    },
-    {
-      title: 'Casa Vila Verde',
-      subtitle: 'Sustentabilidade e conforto',
-      image: 'building.jpg',
-      tags: ['Residenciais'],
-    },
-  ];
-
-  const uniqueTags = Array.from(new Set(itemsArq.flatMap((item) => item.tags)));
-
-  const allTags = ['Todos', ...uniqueTags];
+  const uniqueTags = Array.from(
+    new Set(itemsArqData.flatMap((item: { tags: string[] }) => item.tags))
+  );
 
   return [
-    { params: { tag: undefined }, props: { itemsArq } },
-    ...allTags.map((tag) => ({
+    // Handle the root path '/projetos'
+    { params: { tag: undefined }, props: { itemsArq: itemsArqData } },
+
+    // Handle '/projetos/todos'
+    { params: { tag: 'todos' }, props: { itemsArq: itemsArqData } },
+
+    // Handle specific tags
+    ...uniqueTags.map((tag) => ({
       params: { tag: tag.toLowerCase() },
-      props: { itemsArq },
+      props: { itemsArq: itemsArqData },
     })),
   ];
 }
@@ -63,14 +31,14 @@ const { itemsArq } = Astro.props;
 
 const allTags = [
   'Todos',
-  ...Array.from(new Set(itemsArq.flatMap((item) => item.tags))),
+  ...Array.from(new Set(itemsArq.flatMap((item: { tags: any }) => item.tags))),
 ];
 
 const filteredItems =
   !tag || tag === 'todos'
     ? itemsArq
-    : itemsArq.filter((item) =>
-        item.tags.some((itemTag) => itemTag.toLowerCase() === tag)
+    : itemsArq.filter((item: { tags: any[] }) =>
+        item.tags.some((itemTag: string) => itemTag.toLowerCase() === tag)
       );
 
 const allTagsFormatted = allTags.map((tag) => ({
@@ -103,7 +71,7 @@ const activeTag = tag || 'todos';
               <a
                 href={tagItem.path}
                 class={`inline-flex items-center rounded px-3 py-1 text-sm transition-all duration-300 hover:cursor-pointer ${
-                  (tagItem.name === 'Todos' && !tag) ||
+                  (tagItem.name === 'Todos' && (!tag || tag === 'todos')) ||
                   tagItem.name.toLowerCase() === activeTag
                     ? 'bg-zinc-800 text-white'
                     : 'border border-zinc-200 bg-white hover:bg-zinc-100'
@@ -121,14 +89,23 @@ const activeTag = tag || 'todos';
       class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 animate-staggeredFadeIn"
     >
       {
-        filteredItems.map((item) => (
-          <CardArq
-            image={item.image}
-            title={item.title}
-            subtitle={item.subtitle}
-            tags={item.tags}
-          />
-        ))
+        filteredItems.map(
+          (item: {
+            image: string;
+            title: string;
+            link: string;
+            subtitle: string;
+            tags: string[] | undefined;
+          }) => (
+            <CardArq
+              image={item.image}
+              title={item.title}
+              link={item.link}
+              subtitle={item.subtitle}
+              tags={item.tags}
+            />
+          )
+        )
       }
     </section>
   </section>

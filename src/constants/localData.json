@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Edíficio Roberto Carlos",
+    "subtitle": "Aconchego, visão, design",
+    "image": "building.jpg",
+    "link": "mansao-vista-mar",
+    "tags": ["Residenciais", "Urbanos"]
+  },
+  {
+    "title": "Mansão Vista Mar",
+    "subtitle": "Elegância à beira-mar",
+    "image": "building.jpg",
+    "link": "mansao-vista-mar",
+    "tags": ["Residenciais", "Interiores"]
+  },
+  {
+    "title": "Parque Central",
+    "subtitle": "Espaço urbano revitalizado",
+    "image": "building.jpg",
+    "link": "mansao-vista-mar",
+    "tags": ["Urbanos"]
+  },
+  {
+    "title": "Apartamento Moderno",
+    "subtitle": "Minimalismo e funcionalidade",
+    "image": "building.jpg",
+    "link": "mansao-vista-mar",
+    "tags": ["Residenciais", "Interiores"]
+  },
+  {
+    "title": "Centro Comercial Luz",
+    "subtitle": "Inovação em espaços comerciais",
+    "image": "building.jpg",
+    "link": "centro-comercial",
+    "tags": ["Edifícios", "Urbanos"]
+  },
+  {
+    "title": "Casa Vila Verde",
+    "subtitle": "Sustentabilidade e conforto",
+    "image": "building.jpg",
+    "link": "centro-comercial",
+    "tags": ["Residenciais"]
+  }
+]

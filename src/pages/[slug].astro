@@ -1,0 +1,27 @@
+---
+import { itemsArq } from '../constants/items';
+import Layout from '../layout/layout.astro';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+const project = itemsArq.find((p) => p.link === slug);
+
+if (!project) {
+  throw new Error(`Projeto com slug "${slug}" não encontrado.`);
+}
+---
+
+<Layout>
+  <section class="max-w-4xl mx-auto py-20 px-4">
+    <h1 class="text-4xl font-bold mb-4">{project.title}</h1>
+    <img
+      src={`/images/${project.image}`}
+      alt={project.title}
+      class="w-full mb-6 rounded-xl"
+    />
+    <p class="text-lg text-gray-700 mb-4">{project.subtitle}</p>
+    <p class="text-sm text-gray-500">Tags: {project.tags.join(', ')}</p>
+  </section>
+</Layout>
