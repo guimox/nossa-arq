@@ -12,13 +12,9 @@ export function getStaticPaths() {
   );
 
   return [
-    // Handle the root path '/projetos'
     { params: { tag: undefined }, props: { itemsArq: itemsArqData } },
-
-    // Handle '/projetos/todos'
     { params: { tag: 'todos' }, props: { itemsArq: itemsArqData } },
 
-    // Handle specific tags
     ...uniqueTags.map((tag) => ({
       params: { tag: tag.toLowerCase() },
       props: { itemsArq: itemsArqData },
@@ -69,7 +65,7 @@ const activeTag = tag || 'todos';
           allTagsFormatted.map((tagItem) => (
             <li>
               <a
-                href={tagItem.path}
+                href={'/' + tagItem.path}
                 class={`inline-flex items-center rounded px-3 py-1 text-sm transition-all duration-300 hover:cursor-pointer ${
                   (tagItem.name === 'Todos' && (!tag || tag === 'todos')) ||
                   tagItem.name.toLowerCase() === activeTag

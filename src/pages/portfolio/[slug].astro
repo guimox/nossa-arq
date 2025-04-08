@@ -1,0 +1,323 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { itemsArq } from '../../constants/items';
+import Layout from '../../layout/layout.astro';
+import Title from '../../components/typography/title.astro';
+import Paragraph from '../../components/typography/paragraph.astro';
+import Subtitle from '../../components/typography/subtitle.astro';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+const project = itemsArq.find((p) => p.link === slug);
+
+if (!project) {
+  throw new Error(`Projeto com slug "${slug}" não encontrado.`);
+}
+
+const allImages = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/*.{jpg,jpeg,png,gif,webp,svg}'
+);
+
+const imagePathKey = `/src/assets/${project.image}`;
+
+if (!allImages[imagePathKey]) {
+  throw new Error(
+    `Image "${project.image}" not found in src/assets/. Full path check: ${imagePathKey}`
+  );
+}
+
+const imageModule = await allImages[imagePathKey]();
+const importedImageSrc = imageModule.default;
+
+const optimizedImage = await getImage({
+  src: importedImageSrc,
+  widths: [800, 1200, 1600],
+});
+---
+
+<Layout>
+  <section class="mx-auto content-grid py-12 space-y-40 mt-20">
+    <div class="flex w-full mx-auto justify-between flex-col md:flex-row my-20">
+      <div class="w-full">
+        <Title>
+          APARTAMENTO<br />FERNANDA TORRES
+        </Title>
+        <p class="text-lg text-gray-700 mt-6">{project.subtitle}</p>
+      </div>
+      <div class="bg-white p-6 md:w-2/3 border-l flex flex-col gap-2 justify-center">
+        <Paragraph><span class="font-bold">Tipo:</span> Residencial</Paragraph>
+        <Paragraph><span class="font-bold">Tamanho:</span> 8 andares</Paragraph>
+        <Paragraph
+          ><span class="font-bold">Localização:</span> São Paulo, SP</Paragraph
+        >
+        <Paragraph><span class="font-bold">Cliente:</span> Oscar</Paragraph>
+      </div>
+    </div>
+    <div class="w-full h-fit">
+      <Image
+        src={optimizedImage.src}
+        width={optimizedImage.attributes.width}
+        height={optimizedImage.attributes.height / 2}
+        alt={project.title}
+        class="w-full h-64 rounded-sm object-cover"
+      />
+    </div>
+    <div class="space-y-10">
+      <div class="flex flex-col lg:flex-row gap-20">
+        <div class="flex flex-col w-fit space-y-4">
+          <Subtitle>O Projeto</Subtitle>
+          <Paragraph>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero at nulla
+            animi dolores eius! Deserunt error, est nulla aliquam voluptates eveniet
+            iure debitis non asperiores. Voluptates explicabo sunt magnam rerum!
+            Facilis reiciendis iste, natus molestias maxime praesentium quos sunt
+            accusamus error dolores soluta. Debitis, minima a veritatis voluptas
+            perferendis soluta at voluptates quod dolorum dolorem. Tenetur natus
+            obcaecati minus illo. Delectus sint voluptatibus aspernatur. Eum soluta
+            quisquam voluptas unde possimus vitae corporis cum numquam repellendus
+            modi, adipisci maxime aliquid deserunt debitis qui dolore incidunt ullam
+            ut dolor veritatis nemo praesentium.
+          </Paragraph>
+          <Paragraph>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero at nulla
+            animi dolores eius! Deserunt error, est nulla aliquam voluptates eveniet
+            iure debitis non asperiores. Voluptates explicabo sunt magnam rerum!
+            quisquam voluptas unde possimus vitae corporis cum numquam repellendus
+            modi, adipisci maxime aliquid deserunt debitis qui dolore incidunt ullam
+            ut dolor veritatis nemo praesentium.
+          </Paragraph>
+        </div>
+
+        <div class="w-full">
+          <div
+            class="overflow-hidden relative aspect-[16/9] w-full"
+            data-slideshow-container
+          >
+            <div id="slideImages" class="relative h-full w-full">
+              {
+                Array(3)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div
+                      class={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                        index === 0 ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      data-index={index}
+                    >
+                      <Image
+                        src={optimizedImage.src}
+                        width={optimizedImage.attributes.width}
+                        height={optimizedImage.attributes.height}
+                        alt={`Imagem ${index + 1} do projeto ${project.title}`}
+                        class="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))
+              }
+            </div>
+            <button
+              id="prevButton"
+              class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/70 hover:bg-white/90 text-gray-800 font-bold w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none"
+              aria-label="Imagem anterior"
+            >
+              <span class="sr-only">Anterior</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+
+            <button
+              id="nextButton"
+              class="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/70 hover:bg-white/90 text-gray-800 font-bold w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none"
+              aria-label="Próxima imagem"
+            >
+              <span class="sr-only">Próxima</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <div
+              class="absolute right-0 bottom-0 left-0 z-20 mx-auto flex w-full justify-end px-4 py-3"
+            >
+              <div class="flex gap-2" id="slideButtons">
+                {
+                  Array(3)
+                    .fill(0)
+                    .map((_, index) => (
+                      <button
+                        class={`h-3 w-3 cursor-pointer rounded-full transition-all duration-300 bg-white ${index === 0 ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}
+                        data-index={index}
+                        aria-label={`Ver imagem ${index + 1}`}
+                      />
+                    ))
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const slideImages = document.querySelectorAll('#slideImages [data-index]');
+        const slideButtons = document.querySelectorAll('#slideButtons [data-index]');
+        const slideshowContainer = document.querySelector(
+          '[data-slideshow-container]'
+        );
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+
+        if (
+          !slideImages.length ||
+          !slideButtons.length ||
+          !slideshowContainer ||
+          !prevButton ||
+          !nextButton
+        ) {
+          console.error('Slideshow elements not found!');
+          return;
+        }
+
+        const totalSlides = slideImages.length;
+        let currentSlide = 0;
+        let slideInterval: ReturnType<typeof setInterval>;
+
+        const showSlide = (index: number) => {
+          const newIndex = Math.max(0, Math.min(index, totalSlides - 1));
+
+          if (newIndex === currentSlide && slideInterval) return;
+
+          slideImages.forEach((img, i) => {
+            const imgEl = img as HTMLElement;
+            if (i === newIndex) {
+              imgEl.classList.remove('opacity-0');
+              imgEl.classList.add('opacity-100');
+            } else {
+              imgEl.classList.remove('opacity-100');
+              imgEl.classList.add('opacity-0');
+            }
+          });
+
+          slideButtons.forEach((button, i) => {
+            const btnEl = button as HTMLElement;
+            if (i === newIndex) {
+              btnEl.classList.remove('opacity-50', 'hover:opacity-75');
+              btnEl.classList.add('opacity-100', 'scale-110');
+              btnEl.setAttribute('aria-current', 'true');
+            } else {
+              btnEl.classList.remove('opacity-100', 'scale-110');
+              btnEl.classList.add('opacity-50', 'hover:opacity-75');
+              btnEl.removeAttribute('aria-current');
+            }
+          });
+
+          currentSlide = newIndex;
+        };
+
+        const nextSlide = () => {
+          const next = (currentSlide + 1) % totalSlides;
+          showSlide(next);
+        };
+
+        const prevSlide = () => {
+          const prev = (currentSlide - 1 + totalSlides) % totalSlides;
+          showSlide(prev);
+        };
+
+        slideButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            const indexAttr = button.getAttribute('data-index');
+            if (indexAttr === null) return;
+            const index = parseInt(indexAttr, 10);
+            if (isNaN(index)) return;
+
+            showSlide(index);
+
+            if (slideInterval) {
+              clearInterval(slideInterval);
+              startAutoSlide();
+            }
+          });
+        });
+
+        // Add event listeners for navigation buttons
+        nextButton.addEventListener('click', () => {
+          nextSlide();
+          resetAutoSlide();
+        });
+
+        prevButton.addEventListener('click', () => {
+          prevSlide();
+          resetAutoSlide();
+        });
+
+        const startAutoSlide = () => {
+          if (slideInterval) {
+            clearInterval(slideInterval);
+          }
+          slideInterval = setInterval(nextSlide, 5000);
+        };
+
+        const stopAutoSlide = () => {
+          if (slideInterval) {
+            clearInterval(slideInterval);
+          }
+        };
+
+        const resetAutoSlide = () => {
+          stopAutoSlide();
+          startAutoSlide();
+        };
+
+        slideshowContainer.addEventListener('mouseenter', stopAutoSlide);
+        slideshowContainer.addEventListener('mouseleave', startAutoSlide);
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') {
+            prevSlide();
+            resetAutoSlide();
+          } else if (e.key === 'ArrowRight') {
+            nextSlide();
+            resetAutoSlide();
+          }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            stopAutoSlide();
+          } else {
+            startAutoSlide();
+          }
+        });
+
+        showSlide(0);
+        startAutoSlide();
+      });
+    </script>
+  </section></Layout
+>
