@@ -20,46 +20,67 @@ const allImages = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/*.{jpg,jpeg,png,gif,webp,svg}'
 );
 
-const imagePathKey = `/src/assets/${project.image}`;
+// Load and optimize all project images
+const optimizedImages = await Promise.all(
+  project.images.map(async (imageName) => {
+    const imagePathKey = `/src/assets/${imageName}`;
 
-if (!allImages[imagePathKey]) {
-  throw new Error(
-    `Image "${project.image}" not found in src/assets/. Full path check: ${imagePathKey}`
-  );
-}
+    if (!allImages[imagePathKey]) {
+      throw new Error(
+        `Image "${imageName}" not found in src/assets/. Full path check: ${imagePathKey}`
+      );
+    }
 
-const imageModule = await allImages[imagePathKey]();
-const importedImageSrc = imageModule.default;
+    const imageModule = await allImages[imagePathKey]();
+    const importedImageSrc = imageModule.default;
 
-const optimizedImage = await getImage({
-  src: importedImageSrc,
-  widths: [800, 1200, 1600],
-});
+    const optimizedImage = await getImage({
+      src: importedImageSrc,
+      widths: [800, 1200, 1600],
+      formats: ['webp', 'avif', 'jpeg'],
+      quality: 80,
+    });
+
+    return {
+      src: optimizedImage.src,
+      attributes: optimizedImage.attributes,
+      imageName: imageName,
+    };
+  })
+);
+
+const mainImage = optimizedImages[0];
 ---
 
 <Layout>
-  <section class="mx-auto content-grid py-12 space-y-40 mt-20">
+  <section class="mx-auto content-grid py-12 space-y-50 mt-20">
     <div class="flex w-full mx-auto justify-between flex-col md:flex-row my-20">
       <div class="w-full">
         <Title>
-          APARTAMENTO<br />FERNANDA TORRES
+          {project.title}
         </Title>
         <p class="text-lg text-gray-700 mt-6">{project.subtitle}</p>
       </div>
       <div class="bg-white p-6 md:w-2/3 border-l flex flex-col gap-2 justify-center">
-        <Paragraph><span class="font-bold">Tipo:</span> Residencial</Paragraph>
-        <Paragraph><span class="font-bold">Tamanho:</span> 8 andares</Paragraph>
+        <Paragraph><span class="font-bold">Tipo:</span> {project.tipo}</Paragraph>
         <Paragraph
-          ><span class="font-bold">Localização:</span> São Paulo, SP</Paragraph
+          ><span class="font-bold">Tamanho:</span> {project.area}m²</Paragraph
         >
-        <Paragraph><span class="font-bold">Cliente:</span> Oscar</Paragraph>
+        <Paragraph
+          ><span class="font-bold">Localização:</span>
+          {project.localizacao}</Paragraph
+        >
+        <Paragraph
+          ><span class="font-bold">Cliente:</span> {project.cliente}</Paragraph
+        >
+        <Paragraph><span class="font-bold">Ano:</span> {project.ano}</Paragraph>
       </div>
     </div>
     <div class="w-full h-fit">
       <Image
-        src={optimizedImage.src}
-        width={optimizedImage.attributes.width}
-        height={optimizedImage.attributes.height / 2}
+        src={mainImage.src}
+        width={mainImage.attributes.width}
+        height={mainImage.attributes.height / 2}
         alt={project.title}
         class="w-full h-64 rounded-sm object-cover"
       />
@@ -69,24 +90,7 @@ const optimizedImage = await getImage({
         <div class="flex flex-col w-fit space-y-4">
           <Subtitle>O Projeto</Subtitle>
           <Paragraph>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero at nulla
-            animi dolores eius! Deserunt error, est nulla aliquam voluptates eveniet
-            iure debitis non asperiores. Voluptates explicabo sunt magnam rerum!
-            Facilis reiciendis iste, natus molestias maxime praesentium quos sunt
-            accusamus error dolores soluta. Debitis, minima a veritatis voluptas
-            perferendis soluta at voluptates quod dolorum dolorem. Tenetur natus
-            obcaecati minus illo. Delectus sint voluptatibus aspernatur. Eum soluta
-            quisquam voluptas unde possimus vitae corporis cum numquam repellendus
-            modi, adipisci maxime aliquid deserunt debitis qui dolore incidunt ullam
-            ut dolor veritatis nemo praesentium.
-          </Paragraph>
-          <Paragraph>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero at nulla
-            animi dolores eius! Deserunt error, est nulla aliquam voluptates eveniet
-            iure debitis non asperiores. Voluptates explicabo sunt magnam rerum!
-            quisquam voluptas unde possimus vitae corporis cum numquam repellendus
-            modi, adipisci maxime aliquid deserunt debitis qui dolore incidunt ullam
-            ut dolor veritatis nemo praesentium.
+            {project.projeto}
           </Paragraph>
         </div>
 
@@ -97,24 +101,22 @@ const optimizedImage = await getImage({
           >
             <div id="slideImages" class="relative h-full w-full">
               {
-                Array(3)
-                  .fill(0)
-                  .map((_, index) => (
-                    <div
-                      class={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                        index === 0 ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      data-index={index}
-                    >
-                      <Image
-                        src={optimizedImage.src}
-                        width={optimizedImage.attributes.width}
-                        height={optimizedImage.attributes.height}
-                        alt={`Imagem ${index + 1} do projeto ${project.title}`}
-                        class="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))
+                optimizedImages.map((image, index) => (
+                  <div
+                    class={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                      index === 0 ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    data-index={index}
+                  >
+                    <Image
+                      src={image.src}
+                      width={image.attributes.width}
+                      height={image.attributes.height}
+                      alt={`Imagem ${index + 1} do projeto ${project.title}`}
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                ))
               }
             </div>
             <button
@@ -164,15 +166,13 @@ const optimizedImage = await getImage({
             >
               <div class="flex gap-2" id="slideButtons">
                 {
-                  Array(3)
-                    .fill(0)
-                    .map((_, index) => (
-                      <button
-                        class={`h-3 w-3 cursor-pointer rounded-full transition-all duration-300 bg-white ${index === 0 ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}
-                        data-index={index}
-                        aria-label={`Ver imagem ${index + 1}`}
-                      />
-                    ))
+                  optimizedImages.map((_, index) => (
+                    <button
+                      class={`h-3 w-3 cursor-pointer rounded-full transition-all duration-300 bg-white ${index === 0 ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}
+                      data-index={index}
+                      aria-label={`Ver imagem ${index + 1}`}
+                    />
+                  ))
                 }
               </div>
             </div>
@@ -264,7 +264,6 @@ const optimizedImage = await getImage({
           });
         });
 
-        // Add event listeners for navigation buttons
         nextButton.addEventListener('click', () => {
           nextSlide();
           resetAutoSlide();
@@ -296,7 +295,6 @@ const optimizedImage = await getImage({
         slideshowContainer.addEventListener('mouseenter', stopAutoSlide);
         slideshowContainer.addEventListener('mouseleave', startAutoSlide);
 
-        // Add keyboard navigation
         document.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowLeft') {
             prevSlide();
@@ -319,5 +317,5 @@ const optimizedImage = await getImage({
         startAutoSlide();
       });
     </script>
-  </section></Layout
->
+  </section>
+</Layout>

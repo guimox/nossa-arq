@@ -2,31 +2,37 @@
 import { Image } from 'astro:assets';
 import { cx } from 'class-variance-authority';
 import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { join, relative } from 'path';
 import { getPlaiceholder } from 'plaiceholder';
-import firstImage from '../assets/building.jpg';
-import secondImage from '../assets/glass.jpg';
-import thirdImage from '../assets/house.jpg';
 import Layout from '../layout/layout.astro';
 import Paragraph from '../components/typography/paragraph.astro';
+import { itemsArq } from '../constants/items';
 
-const slides = [
-  {
-    titles: ['Apartamento', 'Fernanda Torres'],
-    link: '#',
-    image: firstImage,
-  },
-  {
-    titles: ['Casa', 'Domingo'],
-    link: '#',
-    image: thirdImage,
-  },
-  {
-    titles: ['Edifício', 'Céu Azul'],
-    link: '#',
-    image: secondImage,
-  },
-];
+const allImages = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/*.{jpg,jpeg,png,gif,webp,svg}'
+);
+
+const slides = await Promise.all(
+  itemsArq.map(async (item) => {
+    const imagePathKey = `/src/assets/${item.images[0]}`;
+
+    if (!allImages[imagePathKey]) {
+      throw new Error(
+        `Image "${item.images}" not found in src/assets/. Full path check: ${imagePathKey}`
+      );
+    }
+
+    const imageModule = await allImages[imagePathKey]();
+    const importedImage = imageModule.default;
+
+    return {
+      titles: [item.superTitle, item.title],
+      link: item.link,
+      image: item.images[0],
+      importedImage,
+    };
+  })
+);
 
 const getLocalImageWithPlaiceholder = async (relativePath: string) => {
   const absolutePath = join(process.cwd(), 'src/assets', relativePath);
@@ -39,11 +45,15 @@ const getLocalImageWithPlaiceholder = async (relativePath: string) => {
 
   return {
     ...plaiceholder,
-    img: { src: firstImage, height, width },
+    img: {
+      src: slides[0].importedImage,
+      height,
+      width,
+    },
   };
 };
 
-const { css, img } = await getLocalImageWithPlaiceholder('building.jpg');
+const { css, img } = await getLocalImageWithPlaiceholder(itemsArq[0].images[0]);
 ---
 
 <Layout>
@@ -76,14 +86,14 @@ const { css, img } = await getLocalImageWithPlaiceholder('building.jpg');
           >
             {index === 0 ? (
               <Image
-                {...img}
+                src={img.src}
                 alt={slide.titles.join(' ')}
                 title={slide.titles[0]}
                 class="w-full h-screen object-cover brightness-40"
               />
             ) : (
               <Image
-                src={slide.image}
+                src={slide.importedImage}
                 alt={slide.titles.join(' ')}
                 title={slide.titles[0]}
                 class="w-full h-screen object-cover brightness-40"
@@ -104,13 +114,13 @@ const { css, img } = await getLocalImageWithPlaiceholder('building.jpg');
             class={`transition-opacity space-y-5 duration-700 ease-in-out ${index === 0 ? 'opacity-100 relative' : 'opacity-0 absolute invisible'}`}
             data-index={index}
           >
-            <div class="space-y-2">
+            <div class="space-y-2 tracking-wide">
               {slide.titles.map((title) => (
                 <h2 class="text-white text-7xl lg:text-8xl font-bold">{title}</h2>
               ))}
             </div>
             <a
-              href={slide.link}
+              href={'/portfolio/' + slide.link}
               class="inline-block text-white underline underline-offset-8 hover:opacity-75 transition-opacity"
             >
               Ver projeto

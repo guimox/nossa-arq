@@ -2,6 +2,7 @@
 import type { ImageMetadata } from 'astro';
 import { getImage, Image } from 'astro:assets';
 import Paragraph from '../typography/paragraph.astro';
+import Subtitle from '../typography/subtitle.astro';
 
 interface Props {
   image: string;
@@ -35,7 +36,8 @@ const optimizedImage = await getImage({
 ---
 
 <div
-  class="card-arq hover:cursor-pointer group relative flex h-full flex-col rounded overflow-hidden bg-white hover:border"
+  id="card"
+  class="card-arq hover:cursor-pointer group relative flex h-full flex-col rounded overflow-hidden bg-white"
 >
   <a href={'/portfolio/' + link}>
     <div class="relative aspect-[4/2] w-full overflow-hidden">
@@ -55,9 +57,10 @@ const optimizedImage = await getImage({
       >
       </div>
     </div>
-    <div class="flex flex-col gap-2 p-5">
-      <Paragraph class="transition-colors duration-300 group-hover:text-zinc-900"
-        >{title}</Paragraph
+    <div class="flex flex-col gap-2 py-5">
+      <Subtitle
+        class="transition-colors font-bold duration-300 group-hover:text-zinc-700"
+        >{title}</Subtitle
       >
       <Paragraph class="text-zinc-500">{subtitle}</Paragraph>
       {
@@ -71,10 +74,6 @@ const optimizedImage = await getImage({
           </div>
         )
       }
-    </div>
-    <div
-      class="accent-line absolute bottom-0 left-0 h-1 w-0 bg-zinc-800 transition-all duration-300 ease-out group-hover:w-full"
-    >
     </div>
   </a>
 </div>

@@ -23,17 +23,17 @@ const mobileMenuTextColor = isHomePage ? 'text-white' : 'text-zinc-700';
     <nav class="hidden md:flex items-center space-x-8 lg:space-x-10">
       <a
         href="/sobre"
-        class={`font-medium text-base hover:opacity-70 transition-opacity ${headerTextColor}`}
+        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor}`}
         >Sobre</a
       >
       <a
         href="/projetos"
-        class={`font-medium text-base hover:opacity-70 transition-opacity ${headerTextColor}`}
+        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor}`}
         >Projetos</a
       >
       <a
         href="/contato"
-        class={`font-medium text-base hover:opacity-70 transition-opacity ${headerTextColor}`}
+        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor}`}
         >Contato</a
       >
     </nav>
@@ -101,29 +101,23 @@ const mobileMenuTextColor = isHomePage ? 'text-white' : 'text-zinc-700';
 </header>
 
 <script>
-  // Ensure script runs after the DOM is fully loaded
   document.addEventListener('DOMContentLoaded', () => {
     const header = document.getElementById('main-header');
     const toggleButton = document.getElementById('nav-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
-    // No need to select individual bars if using group hover/focus states with classes
 
     if (!toggleButton || !mobileMenu || !header) {
       console.error('Header elements not found!');
-      return; // Exit if elements aren't found
+      return;
     }
 
-    // Function to toggle menu state
     const toggleMenu = () => {
       const isActive = toggleButton.classList.contains('is-active');
 
-      // Toggle button active state and ARIA attribute
       toggleButton.classList.toggle('is-active');
       toggleButton.setAttribute('aria-expanded', String(!isActive));
 
-      // Toggle mobile menu visibility classes
       if (!isActive) {
-        // Opening menu
         mobileMenu.classList.remove('max-h-0', 'opacity-0', 'invisible');
         mobileMenu.classList.add(
           'max-h-[calc(100vh-5rem)]',
@@ -131,27 +125,21 @@ const mobileMenuTextColor = isHomePage ? 'text-white' : 'text-zinc-700';
           'visible',
           'border-t',
           'border-zinc-300/20'
-        ); // Add border when open
-        // Optional: Add a background to header on home page only when menu is open
+        );
         if (header.classList.contains('text-white')) {
-          // A proxy for isHomePage
-          header.classList.add('bg-zinc-800/95'); // Match mobile menu bg
+          header.classList.add('bg-zinc-800/95');
         }
       } else {
-        // Closing menu
         mobileMenu.classList.add('max-h-0', 'opacity-0');
-        // Delay hiding with visibility to allow transition to complete
         setTimeout(() => {
-          // Ensure it's still closed before hiding completely
           if (!toggleButton.classList.contains('is-active')) {
             mobileMenu.classList.add('invisible');
             mobileMenu.classList.remove('border-t');
-            // Optional: Remove header background on home page when menu closes
             if (header.classList.contains('text-white')) {
               header.classList.remove('bg-zinc-800/95');
             }
           }
-        }, 300); // Match transition duration
+        }, 300);
         mobileMenu.classList.remove(
           'max-h-[calc(100vh-5rem)]',
           'opacity-100',
@@ -160,23 +148,20 @@ const mobileMenuTextColor = isHomePage ? 'text-white' : 'text-zinc-700';
       }
     };
 
-    // Event listener for the toggle button
     toggleButton.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent potential conflicts if clicking inside header
+      e.stopPropagation();
       toggleMenu();
     });
 
-    // Close menu when clicking on a mobile menu link
     const mobileLinks = mobileMenu.querySelectorAll('a');
     mobileLinks.forEach((link) => {
       link.addEventListener('click', () => {
         if (toggleButton.classList.contains('is-active')) {
-          toggleMenu(); // Close the menu
+          toggleMenu();
         }
       });
     });
 
-    // Optional: Close menu when clicking outside the header/menu
     document.addEventListener('click', (e) => {
       if (
         toggleButton.classList.contains('is-active') &&
@@ -186,7 +171,6 @@ const mobileMenuTextColor = isHomePage ? 'text-white' : 'text-zinc-700';
       }
     });
 
-    // Optional: Close menu on ESC key press
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && toggleButton.classList.contains('is-active')) {
         toggleMenu();

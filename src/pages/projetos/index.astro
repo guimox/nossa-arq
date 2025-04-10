@@ -1,0 +1,188 @@
+---
+import Heading from '../../app/heading.astro';
+import CardArq from '../../components/sections/card-arq.astro';
+import Subtitle from '../../components/typography/subtitle.astro';
+import Title from '../../components/typography/title.astro';
+import Layout from '../../layout/layout.astro';
+import { itemsArq } from '../../constants/items';
+
+export const prerender = false;
+
+const allTags = [
+  'Todos',
+  ...Array.from(new Set(itemsArq.flatMap((item: { tags: string[] }) => item.tags))),
+];
+
+const allTagsFormatted = allTags.map((tagName: string) => {
+  const tagLower = tagName.toLowerCase();
+
+  const path =
+    tagName === 'Todos'
+      ? '/projetos'
+      : `/projetos?tag=${encodeURIComponent(tagLower)}`;
+
+  return {
+    name: tagName,
+    path: path,
+    tagIdentifier: tagLower,
+  };
+});
+
+const allItems = itemsArq;
+---
+
+<Layout>
+  <section
+    id="projeto"
+    class="content-grid max-w-[1700px] mx-auto mt-10 space-y-12 px-4 py-10 text-zinc-700 md:mt-10 md:space-y-20 md:px-6 md:py-20 lg:px-0"
+  >
+    <div class="flex flex-col items-center space-y-4 text-center">
+      <div class="flex items-center gap-4">
+        <div class="h-12 w-12 bg-gray-500 animate-colorBlock"></div>
+        <div class="h-12 w-12 bg-gray-200 animate-colorBlock"></div>
+      </div>
+      <Heading class="animate-fadeIn">
+        <Title class="text-2xl font-bold">Projetos</Title>
+        <Subtitle class="text-lg">Feitos de forma única</Subtitle>
+      </Heading>
+      <ul
+        id="project-tags-list"
+        class="mt-6 flex flex-wrap items-center justify-center gap-3 md:gap-4 animate-fadeIn"
+      >
+        {
+          allTagsFormatted.map((tagItem) => (
+            <li>
+              <a
+                href={tagItem.path}
+                data-tag={tagItem.tagIdentifier}
+                class:list={[
+                  'project-tag-link',
+                  'inline-flex items-center rounded px-3 py-1 text-sm transition-all duration-300 hover:cursor-pointer',
+                  'border border-zinc-200 bg-white hover:bg-zinc-100',
+                ]}
+                role="button"
+              >
+                {tagItem.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <section
+      id="project-cards-grid"
+      class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+      aria-live="polite"
+    >
+      {
+        allItems.map(
+          (item: {
+            images: string[];
+            title: string;
+            link: string;
+            subtitle: string;
+            tags: string[] | undefined;
+          }) => {
+            const dataTagsString =
+              item.tags?.map((t) => t.toLowerCase()).join(',') || '';
+            return (
+              <div class="project-card" data-tags={dataTagsString}>
+                <CardArq
+                  image={item.images[0]}
+                  title={item.title}
+                  link={item.link}
+                  subtitle={item.subtitle}
+                  tags={item.tags}
+                />
+              </div>
+            );
+          }
+        )
+      }
+      <p
+        id="no-projects-message"
+        class="col-span-full text-center text-zinc-500 hidden"
+      >
+        Nenhum projeto encontrado para a tag "<span id="no-projects-tag-name"
+        ></span>".
+      </p>
+    </section>
+  </section>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tagList = document.getElementById('project-tags-list');
+      const projectGrid = document.getElementById('project-cards-grid');
+      const allTagLinks = tagList.querySelectorAll('a.project-tag-link');
+      const allProjectCards = projectGrid.querySelectorAll('.project-card');
+      const noProjectsMessage = document.getElementById('no-projects-message');
+      const noProjectsTagNameSpan = document.getElementById('no-projects-tag-name');
+
+      function getTagFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('tag')?.toLowerCase() || 'todos';
+      }
+
+      function applyFilter(activeTagIdentifier) {
+        let hasVisibleProjects = false;
+
+        allTagLinks.forEach((link) => {
+          const linkTag = link.dataset.tag;
+          const isActive = linkTag === activeTagIdentifier;
+          link.classList.toggle('bg-zinc-800', isActive);
+          link.classList.toggle('text-white', isActive);
+          link.classList.toggle('border-zinc-200', !isActive);
+          link.classList.toggle('bg-white', !isActive);
+          link.classList.toggle('hover:bg-zinc-100', !isActive);
+          link.setAttribute('aria-current', isActive ? 'page' : 'false');
+        });
+
+        allProjectCards.forEach((card) => {
+          const cardTags = card.dataset.tags ? card.dataset.tags.split(',') : [];
+          const shouldShow =
+            activeTagIdentifier === 'todos' ||
+            cardTags.includes(activeTagIdentifier);
+
+          card.style.display = shouldShow ? '' : 'none';
+
+          if (shouldShow) {
+            hasVisibleProjects = true;
+          }
+        });
+
+        if (activeTagIdentifier !== 'todos' && !hasVisibleProjects) {
+          noProjectsTagNameSpan.textContent = activeTagIdentifier;
+          noProjectsMessage.style.display = '';
+        } else {
+          noProjectsMessage.style.display = 'none';
+        }
+      }
+
+      tagList.addEventListener('click', (event) => {
+        const clickedLink = event.target.closest('a.project-tag-link');
+
+        if (!clickedLink) {
+          return;
+        }
+
+        event.preventDefault();
+
+        const tagIdentifier = clickedLink.dataset.tag;
+        const newPath = clickedLink.getAttribute('href');
+
+        applyFilter(tagIdentifier);
+
+        window.history.pushState({ tag: tagIdentifier }, '', newPath);
+      });
+
+      window.addEventListener('popstate', (event) => {
+        const currentTag = getTagFromUrl();
+        applyFilter(currentTag);
+      });
+
+      const initialTag = getTagFromUrl();
+      applyFilter(initialTag);
+    });
+  </script>
+</Layout>
