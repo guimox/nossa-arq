@@ -5,8 +5,10 @@ import Footer from '../app/footer.astro';
 
 import '../styles/global.css';
 import '../styles/animate.css';
+import Maintenance from '../components/sections/maintenance.astro';
 
 const isHomePage = Astro.url.pathname === '/';
+const MAINTENANCE_MODE = import.meta.env.MAINTENANCE_MODE === 'true';
 ---
 
 <html lang="en">
@@ -27,11 +29,19 @@ const isHomePage = Astro.url.pathname === '/';
   <body
     class={`overflow-x-hidden antialiased transition-all duration-500 ease-in-out`}
   >
-    <Header />
-    <Cursor />
-    <main class="w-full">
-      <slot />
-    </main>
-    {!isHomePage && <Footer />}
+    {
+      MAINTENANCE_MODE ? (
+        <Maintenance />
+      ) : (
+        <>
+          <Header />
+          <Cursor />
+          <main class="w-full">
+            <slot />
+          </main>
+          {!isHomePage && <Footer />}
+        </>
+      )
+    }
   </body>
 </html>
