@@ -4,35 +4,35 @@ const message = 'Estamos trabalhando para trazer algo incrível';
 const instagram = 'https://instagram.com/nossa.arq';
 const email = 'contato@nossaarquitetura.com';
 import { Image } from 'astro:assets';
-import imageBackground from '../../assets/res1.png';
+import imageBackground from '../../assets/1/image1.png';
 ---
 
 <div class="fixed inset-0 flex items-center justify-center overflow-hidden">
-  <div class="absolute inset-0 w-full h-full z-0">
+  <div class="absolute inset-0 z-0 h-full w-full">
     <Image
       src={imageBackground}
       alt="Background"
-      class="object-cover w-full h-full brightness-20"
+      class="h-full w-full object-cover brightness-20"
       loading="eager"
     />
   </div>
-  <div class="text-center z-10 relative">
+  <div class="relative z-10 text-center">
     <h1 class="mb-4 text-6xl font-bold text-white">{logo}</h1>
-    <div class="flex flex-col gap-3 my-40">
-      <p class="text-white text-2xl">{message}</p>
-      <div class="flex items-center justify-center gap-4 mt-6">
+    <div class="my-40 flex flex-col gap-3">
+      <p class="text-2xl text-white">{message}</p>
+      <div class="mt-6 flex items-center justify-center gap-4">
         <a
           href={instagram}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-white hover:text-gray-300 transition-colors"
+          class="text-white transition-colors hover:text-gray-300"
         >
           Instagram
         </a>
         <span class="text-white">•</span>
         <a
           href={`mailto:${email}`}
-          class="text-white hover:text-gray-300 transition-colors"
+          class="text-white transition-colors hover:text-gray-300"
         >
           {email}
         </a>

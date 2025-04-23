@@ -12,5 +12,5 @@ export default {
     },
   },
   variants: {},
-  plugins: [], // Remove the string 'prettier-plugin-tailwindcss'
+  plugins: ['prettier-plugin-tailwindcss'],
 };

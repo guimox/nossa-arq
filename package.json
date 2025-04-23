@@ -7,6 +7,7 @@
     "build": "astro build",
     "preview": "wrangler pages dev ./dist",
     "astro": "astro",
+    "format": "npx prettier --write .",
     "deploy": "npm run build && npx wrangler pages deploy dist"
   },
   "dependencies": {
@@ -22,7 +23,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "prettier": "^3.5.3",
+    "prettier": "3.5.3",
+    "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.11"
   }
 }

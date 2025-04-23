@@ -38,29 +38,17 @@ const currentYear = new Date().getFullYear();
         <div>
           <h3 class="mb-3 text-lg font-bold text-zinc-700">Serviços</h3>
           <ul class="space-y-2">
-            <li>
-              <a href="/servicos/residencial" class={linkStyle}> Residencial </a>
-            </li>
-            <li>
-              <a href="/servicos/comercial" class={linkStyle}> Comercial </a>
-            </li>
-            <li>
-              <a href="/servicos/interiores" class={linkStyle}>
-                Design de Interiores
-              </a>
-            </li>
-            <li>
-              <a href="/servicos/paisagismo" class={linkStyle}> Paisagismo </a>
-            </li>
+            <li class="text-zinc-500">Residencial e interiores</li>
+            <li class="text-zinc-500">Comercial e viabilidade</li>
+            <li class="text-zinc-500">Reforma e fachadas</li>
+            <li class="text-zinc-500">Paisagismo e luminotécnico</li>
           </ul>
         </div>
-
         <div class="col-span-2 mt-6 sm:col-span-1 sm:mt-0">
           <h3 class="mb-3 text-lg font-bold text-zinc-700">Contato</h3>
           <ul class="space-y-2">
-            <li class="text-zinc-500">contato@nossaarquitetura.com</li>
-            <li class="text-zinc-500">+55 (11) 9999-9999</li>
-            <li class="text-zinc-500">São Paulo, SP - Brasil</li>
+            <li class="text-zinc-500">contato@nossa.arq.br</li>
+            <li class="text-zinc-500">@nossa.arq</li>
           </ul>
         </div>
       </div>
@@ -68,14 +56,28 @@ const currentYear = new Date().getFullYear();
 
     <div class="py-4 text-sm">
       <div
-        class="flex text-zinc-500 flex-col items-start space-y-3 sm:flex-row sm:justify-between sm:space-y-0 md:items-center"
+        class="flex flex-col items-start space-y-3 text-zinc-500 sm:flex-row sm:justify-between sm:space-y-0 md:items-center"
       >
         <Paragraph>
           © {currentYear} Nossa Arquitetura. Todos os direitos reservados.
         </Paragraph>
         <div class="flex space-x-4 sm:space-x-6">
-          <a href="/privacidade" class={linkStyle}> Política de Privacidade </a>
-          <a href="/termos" class={linkStyle}> Termos de Uso </a>
+          <a
+            href="/politica-privacidade.pdf"
+            class={linkStyle}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Política de Privacidade
+          </a>
+          <a
+            href="/termos-de-uso.pdf"
+            class={linkStyle}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Termos de Uso
+          </a>
         </div>
       </div>
     </div>

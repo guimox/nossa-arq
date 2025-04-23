@@ -4,20 +4,18 @@ import Layout from '../layout/layout.astro';
 import Title from '../components/typography/title.astro';
 import Subtitle from '../components/typography/subtitle.astro';
 import Heading from '../app/heading.astro';
-import image1 from '../assets/res1.png';
+import image1 from '../assets/1/image1.png';
 import Paragraph from '../components/typography/paragraph.astro';
 ---
 
-<Layout>
-  <section class="content-grid mt-20 md:mt-40 space-y-20 text-zinc-700">
+<Layout link="sobre">
+  <section class="content-grid mt-20 space-y-20 text-zinc-700 md:mt-40">
     <div
       class="flex flex-col-reverse items-start justify-between gap-5 md:flex-row md:items-center"
     >
       <Heading>
         <Title>Sobre nós</Title>
-        <Subtitle class="w-3/4 lg:w-full">
-          Inspirados e motivados a criar as melhores soluções para os seus sonhos
-        </Subtitle>
+        <Subtitle> Nossa arquitetura é a sua também. </Subtitle>
       </Heading>
       <div class="flex items-center gap-4">
         <div class="h-[3rem] w-[3rem] bg-gray-500"></div>
@@ -25,25 +23,38 @@ import Paragraph from '../components/typography/paragraph.astro';
       </div>
     </div>
 
-    <div class="grid grid-cols-1 items-center gap-20 md:grid-cols-2 lg:grid-cols-3">
-      {
-        [0, 1, 2].map(() => (
-          <div>
-            <Paragraph>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eum,
-              cupiditate soluta at ut ea recusandae officiis nisi magni enim facilis
-              optio possimus alias tempora iure nemo. Blanditiis adipisci id unde!
-              Nisi, ad aut eligendi placeat unde assumenda quia voluptate. Labore
-              error cumque harum nemo rem iste quos temporibus, id eius ullam
-              repellat possimus recusandae saepe dolore temporibus quaerat. Nulla.
-              Quibusdam facere labore fugiat. Hic nihil ut consectetur illum
-              similique corporis debitis accusamus! Tempore iusto, eveniet quo est,
-              odit facere nesciunt et ipsum, rem vel neque deleniti placeat!
-              Laudantium, voluptatum!
-            </Paragraph>
-          </div>
-        ))
-      }
+    <div class="grid grid-cols-1 items-start gap-10 lg:grid-cols-3 lg:gap-20">
+      <div>
+        <Paragraph>
+          Cada traço, cada decisão, cada espaço nasce do encontro entre a nossa
+          escuta e a sua visão. Acreditamos que não há uma fórmula universal — cada
+          projeto é único porque cada pessoa, cada história e cada contexto também o
+          são. Por isso, nossos processos são colaborativos: o cliente é parte
+          essencial da criação, contribuindo ativamente para soluções que traduzem
+          seus desejos em espaços memoráveis, distinguíveis e profundamente
+          brasileiros.
+        </Paragraph>
+      </div>
+      <div>
+        <Paragraph>
+          Mais do que estética, buscamos uma arquitetura economicamente viável,
+          ambientalmente responsável e socialmente justa. Projetamos com consciência
+          e compromisso, acreditando que todo espaço deve ser acessível, inclusivo e
+          convidativo. Para nós, arquitetura é lugar de sonho, de pertencimento e de
+          possibilidades — sempre feita para todos, com todos.
+        </Paragraph>
+      </div>
+      <div>
+        <Paragraph>
+          Cada projeto que desenvolvemos carrega a intenção de dialogar com o tempo,
+          o entorno e as pessoas. Buscamos soluções que sejam não apenas funcionais e
+          belas, mas também relevantes — que respeitem a paisagem, revelem a
+          identidade de quem habita e contribuam para um futuro mais sensível e
+          consciente. Acreditamos na força do desenho como instrumento de
+          transformação e na arquitetura como linguagem que se escreve com
+          responsabilidade, afeto e propósito.
+        </Paragraph>
+      </div>
     </div>
 
     <div class="full-width bg-zinc-300">
@@ -59,52 +70,15 @@ import Paragraph from '../components/typography/paragraph.astro';
           class="h-auto w-full"
         />
         <Paragraph class="w-full lg:w-3/4">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis iste modi ab!
-          Et doloribus vitae atque error recusandae eligendi pariatur eos. Sapiente
-          molestias ut cum magnam temporibus, enim harum sint? Quis minus cupiditate
-          commodi illo, alias error aliquid. A reiciendis adipisci, nisi veniam,
-          commodi libero repellendus sequi necessitatibus illum expedita facere
-          exercitationem quis eveniet? Mollitia perspiciatis autem eos ratione ipsa.
-        </Paragraph>
-      </div>
-    </div>
-
-    <div class="space-y-20 bg-orange-700 p-6 md:p-14 text-white">
-      <div class="max-w-5xl space-y-4 text-justify">
-        <Heading>
-          <Title>Desenho</Title>
-          <Subtitle>Planejar e detalhar ao máximo antes de construir</Subtitle>
-        </Heading>
-        <Paragraph>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt nesciunt
-          ut sunt ullam neque, sequi hic, facilis aperiam porro vel saepe
-          reprehenderit tempore optio velit perferendis delectus, quo totam
-          voluptatibus! Autem dolorum vero quidem, accusantium voluptatibus harum
-          aspernatur incidunt recusandae tenetur! Ipsum necessitatibus ullam
-          voluptatem similique eos eligendi officia? Reiciendis a ut tenetur sit.
-          Nostrum expedita rerum aliquam blanditiis doloremque! Recusandae dolor
-          voluptatibus iste esse hic tempora architecto provident ratione minima vero
-          obcaecati dolorem necessitatibus natus consequatur quia, facilis doloribus
-          vel inventore aliquam repellendus. Cum minima nostrum ipsa soluta pariatur.
-        </Paragraph>
-      </div>
-
-      <div class="ml-auto max-w-5xl space-y-4 text-end">
-        <Heading>
-          <Title>Renderização</Title>
-          <Subtitle>Possibilidades, creatividade e poder de escolha</Subtitle>
-        </Heading>
-        <Paragraph>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt nesciunt
-          ut sunt ullam neque, sequi hic, facilis aperiam porro vel saepe
-          reprehenderit tempore optio velit perferendis delectus, quo totam
-          voluptatibus! Autem dolorum vero quidem, accusantium voluptatibus harum
-          aspernatur incidunt recusandae tenetur! Ipsum necessitatibus ullam
-          voluptatem similique eos eligendi officia? Reiciendis a ut tenetur sit.
-          Nostrum expedita rerum aliquam blanditiis doloremque! Recusandae dolor
-          voluptatibus iste esse hic tempora architecto provident ratione minima vero
-          obcaecati dolorem necessitatibus natus consequatur quia, facilis doloribus
-          vel inventore aliquam repellendus. Cum minima nostrum ipsa soluta pariatur.
+          Quando há afinidade entre visão e proposta, a arquitetura acontece com mais
+          verdade. É nesse encontro que a nossa arquitetura ganha sentido: atraindo
+          olhares, instigando sonhos e se somando com leveza à paisagem urbana. Seja
+          no sonho de quem empreende, na vivência de quem habita ou no olhar de quem
+          apenas contempla, cada projeto nasce do desejo de criar espaços com
+          autenticidade, propósito e beleza. E é com essa intenção que seguimos,
+          transformando ideias em lugares cheios de significado. Se encontrou
+          afinidade com esse tipo de projeto, então sua visão vai de encontro com a
+          nossa arquitetura!
         </Paragraph>
       </div>
     </div>

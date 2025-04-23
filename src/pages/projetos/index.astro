@@ -31,15 +31,15 @@ const allTagsFormatted = allTags.map((tagName: string) => {
 const allItems = itemsArq;
 ---
 
-<Layout>
+<Layout link="projetos">
   <section
     id="projeto"
-    class="content-grid max-w-[1700px] mx-auto mt-10 space-y-12 px-4 py-10 text-zinc-700 md:mt-10 md:space-y-20 md:px-6 md:py-20 lg:px-0"
+    class="content-grid mx-auto mt-10 max-w-[1700px] space-y-12 px-4 py-10 text-zinc-700 md:mt-10 md:space-y-20 md:px-6 md:py-20 lg:px-0"
   >
     <div class="flex flex-col items-center space-y-4 text-center">
       <div class="flex items-center gap-4">
-        <div class="h-12 w-12 bg-gray-500 animate-colorBlock"></div>
-        <div class="h-12 w-12 bg-gray-200 animate-colorBlock"></div>
+        <div class="animate-colorBlock h-12 w-12 bg-gray-500"></div>
+        <div class="animate-colorBlock h-12 w-12 bg-gray-200"></div>
       </div>
       <Heading class="animate-fadeIn">
         <Title>Projetos</Title>
@@ -47,7 +47,7 @@ const allItems = itemsArq;
       </Heading>
       <ul
         id="project-tags-list"
-        class="mt-6 flex flex-wrap items-center justify-center gap-3 md:gap-4 animate-fadeIn"
+        class="animate-fadeIn mt-6 flex flex-wrap items-center justify-center gap-3 md:gap-4"
       >
         {
           allTagsFormatted.map((tagItem) => (
@@ -80,6 +80,7 @@ const allItems = itemsArq;
           (item: {
             images: string[];
             title: string;
+            id: string;
             link: string;
             subtitle: string;
             tags: string[] | undefined;
@@ -89,6 +90,7 @@ const allItems = itemsArq;
             return (
               <div class="project-card" data-tags={dataTagsString}>
                 <CardArq
+                  id={item.id}
                   image={item.images[0]}
                   title={item.title}
                   link={item.link}
@@ -102,7 +104,7 @@ const allItems = itemsArq;
       }
       <p
         id="no-projects-message"
-        class="col-span-full text-center text-zinc-500 hidden"
+        class="col-span-full hidden text-center text-zinc-500"
       >
         Nenhum projeto encontrado para a tag "<span id="no-projects-tag-name"
         ></span>".

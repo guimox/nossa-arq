@@ -2,13 +2,14 @@
 import Cursor from '../app/cursor.astro';
 import Header from '../app/header.astro';
 import Footer from '../app/footer.astro';
+import Maintenance from '../components/sections/maintenance.astro';
 
 import '../styles/global.css';
 import '../styles/animate.css';
-import Maintenance from '../components/sections/maintenance.astro';
 
 const isHomePage = Astro.url.pathname === '/';
 const MAINTENANCE_MODE = import.meta.env.MAINTENANCE_MODE === 'true';
+const { link } = Astro.props;
 ---
 
 <html lang="en">
@@ -34,7 +35,7 @@ const MAINTENANCE_MODE = import.meta.env.MAINTENANCE_MODE === 'true';
         <Maintenance />
       ) : (
         <>
-          <Header />
+          <Header link={link} />
           <Cursor />
           <main class="w-full">
             <slot />

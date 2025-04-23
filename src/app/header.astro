@@ -1,75 +1,83 @@
 ---
 const isHomePage = Astro.url.pathname === '/';
+const currentPath = Astro.url.pathname.slice(1);
 
 const headerTextColor = isHomePage ? 'text-white' : 'text-zinc-700';
 const barColor = isHomePage ? 'bg-white' : 'bg-zinc-700';
 const mobileMenuBg = isHomePage ? 'bg-zinc-800/95' : 'bg-white';
 const mobileMenuTextColor = isHomePage ? 'text-white' : 'text-zinc-700';
+
+const isLinkActive = (path: string) =>
+  currentPath === path ? '!font-bold' : 'font-normal';
 ---
 
 <header
   class:list={[
-    'content-grid absolute bg-transparent top-0 z-30 mx-auto w-full border-b',
+    'content-grid absolute top-0 z-30 mx-auto w-full border-b bg-transparent',
     headerTextColor,
   ]}
   id="main-header"
 >
   <div
-    class="flex h-20 max-w-[1700px] mx-auto w-full items-center justify-between text-lg"
+    class="mx-auto flex h-20 w-full max-w-[1700px] items-center justify-between text-lg"
   >
     <div class={`text-xl font-bold ${headerTextColor}`}>
       <a href="/" class={`font-bold ${headerTextColor}`}>Nossa Arquitetura</a>
     </div>
-    <nav class="hidden md:flex items-center space-x-8 lg:space-x-10">
+    <nav class="hidden items-center space-x-8 md:flex lg:space-x-10">
       <a
         href="/sobre"
-        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor}`}
-        >Sobre</a
+        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor} ${isLinkActive('sobre')}`}
       >
+        Sobre
+      </a>
       <a
         href="/projetos"
-        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor}`}
-        >Projetos</a
+        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor} ${isLinkActive('projetos')}`}
       >
+        Projetos
+      </a>
       <a
         href="/contato"
-        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor}`}
-        >Contato</a
+        class={`font-medium text-base md:text-lg hover:opacity-70 transition-opacity ${headerTextColor} ${isLinkActive('contato')}`}
       >
+        Contato
+      </a>
     </nav>
-    <button
-      class="group relative z-50 flex h-8 w-8 cursor-pointer items-center justify-center rounded p-1 md:hidden"
-      aria-label="Toggle navigation menu"
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-      id="nav-toggle"
-    >
-      <span class="sr-only">Open main menu</span>
-      <div class="relative block h-full w-full">
-        <span
-          id="bar1"
-          class:list={[
-            'absolute left-1/2 top-[calc(50%-6px)] block h-0.5 w-5 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
-            barColor,
-            'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:rotate-45', // Move to center and rotate
-          ]}></span>
-        <span
-          id="bar2"
-          class:list={[
-            'absolute left-1/2 top-1/2 block h-[1.5px] w-5 -translate-x-1/2 -translate-y-1/2 transform rounded-full transition-opacity duration-300 ease-in-out',
-            barColor,
-            'group-[.is-active]:opacity-0',
-          ]}></span>
-        <span
-          id="bar3"
-          class:list={[
-            'absolute left-1/2 top-[calc(50%+5px)] block h-0.5 w-5 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
-            barColor,
-            'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:-rotate-45', // Move to center and rotate opposite
-          ]}></span>
-      </div>
-    </button>
   </div>
+
+  <button
+    class="group relative z-50 flex h-8 w-8 cursor-pointer items-center justify-center rounded p-1 md:hidden"
+    aria-label="Toggle navigation menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+    id="nav-toggle"
+  >
+    <span class="sr-only">Open main menu</span>
+    <div class="relative block h-full w-full">
+      <span
+        id="bar1"
+        class:list={[
+          'absolute top-[calc(50%-6px)] left-1/2 block h-0.5 w-5 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
+          barColor,
+          'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:rotate-45',
+        ]}></span>
+      <span
+        id="bar2"
+        class:list={[
+          'absolute top-1/2 left-1/2 block h-[1.5px] w-5 -translate-x-1/2 -translate-y-1/2 transform rounded-full transition-opacity duration-300 ease-in-out',
+          barColor,
+          'group-[.is-active]:opacity-0',
+        ]}></span>
+      <span
+        id="bar3"
+        class:list={[
+          'absolute top-[calc(50%+5px)] left-1/2 block h-0.5 w-5 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
+          barColor,
+          'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:-rotate-45',
+        ]}></span>
+    </div>
+  </button>
 
   <div
     id="mobile-menu"
@@ -77,104 +85,107 @@ const mobileMenuTextColor = isHomePage ? 'text-white' : 'text-zinc-700';
       'absolute top-full left-0 z-40 w-full transform overflow-hidden md:hidden',
       'transition-all duration-300 ease-in-out',
       mobileMenuBg,
-      'max-h-0 opacity-0 invisible',
+      'invisible max-h-0 opacity-0',
     ]}
   >
     <div class="flex flex-col p-4 pt-2 pb-4">
       <a
         href="/sobre"
-        class={`block font-medium text-lg py-3 ${mobileMenuTextColor} hover:opacity-70 transition-opacity`}
-        >Sobre</a
+        class={`block font-medium text-lg py-3 ${mobileMenuTextColor} hover:opacity-70 transition-opacity ${isLinkActive('sobre')}`}
       >
+        Sobre
+      </a>
       <a
         href="/projetos"
-        class={`block font-medium text-lg py-3 ${mobileMenuTextColor} hover:opacity-70 transition-opacity`}
-        >Projetos</a
+        class={`block font-medium text-lg py-3 ${mobileMenuTextColor} hover:opacity-70 transition-opacity ${isLinkActive('projetos')}`}
       >
+        Projetos
+      </a>
       <a
         href="/contato"
-        class={`block font-medium text-lg py-3 ${mobileMenuTextColor} hover:opacity-70 transition-opacity`}
-        >Contato</a
+        class={`block font-medium text-lg py-3 ${mobileMenuTextColor} hover:opacity-70 transition-opacity ${isLinkActive('contato')}`}
       >
+        Contato
+      </a>
     </div>
   </div>
-</header>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const header = document.getElementById('main-header');
-    const toggleButton = document.getElementById('nav-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const header = document.getElementById('main-header');
+      const toggleButton = document.getElementById('nav-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
 
-    if (!toggleButton || !mobileMenu || !header) {
-      console.error('Header elements not found!');
-      return;
-    }
-
-    const toggleMenu = () => {
-      const isActive = toggleButton.classList.contains('is-active');
-
-      toggleButton.classList.toggle('is-active');
-      toggleButton.setAttribute('aria-expanded', String(!isActive));
-
-      if (!isActive) {
-        mobileMenu.classList.remove('max-h-0', 'opacity-0', 'invisible');
-        mobileMenu.classList.add(
-          'max-h-[calc(100vh-5rem)]',
-          'opacity-100',
-          'visible',
-          'border-t',
-          'border-zinc-300/20'
-        );
-        if (header.classList.contains('text-white')) {
-          header.classList.add('bg-zinc-800/95');
-        }
-      } else {
-        mobileMenu.classList.add('max-h-0', 'opacity-0');
-        setTimeout(() => {
-          if (!toggleButton.classList.contains('is-active')) {
-            mobileMenu.classList.add('invisible');
-            mobileMenu.classList.remove('border-t');
-            if (header.classList.contains('text-white')) {
-              header.classList.remove('bg-zinc-800/95');
-            }
-          }
-        }, 300);
-        mobileMenu.classList.remove(
-          'max-h-[calc(100vh-5rem)]',
-          'opacity-100',
-          'visible'
-        );
+      if (!toggleButton || !mobileMenu || !header) {
+        console.error('Header elements not found!');
+        return;
       }
-    };
 
-    toggleButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleMenu();
-    });
+      const toggleMenu = () => {
+        const isActive = toggleButton.classList.contains('is-active');
 
-    const mobileLinks = mobileMenu.querySelectorAll('a');
-    mobileLinks.forEach((link) => {
-      link.addEventListener('click', () => {
-        if (toggleButton.classList.contains('is-active')) {
+        toggleButton.classList.toggle('is-active');
+        toggleButton.setAttribute('aria-expanded', String(!isActive));
+
+        if (!isActive) {
+          mobileMenu.classList.remove('max-h-0', 'opacity-0', 'invisible');
+          mobileMenu.classList.add(
+            'max-h-[calc(100vh-5rem)]',
+            'opacity-100',
+            'visible',
+            'border-t',
+            'border-zinc-300/20'
+          );
+          if (header.classList.contains('text-white')) {
+            header.classList.add('bg-zinc-800/95');
+          }
+        } else {
+          mobileMenu.classList.add('max-h-0', 'opacity-0');
+          setTimeout(() => {
+            if (!toggleButton.classList.contains('is-active')) {
+              mobileMenu.classList.add('invisible');
+              mobileMenu.classList.remove('border-t');
+              if (header.classList.contains('text-white')) {
+                header.classList.remove('bg-zinc-800/95');
+              }
+            }
+          }, 300);
+          mobileMenu.classList.remove(
+            'max-h-[calc(100vh-5rem)]',
+            'opacity-100',
+            'visible'
+          );
+        }
+      };
+
+      toggleButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+      });
+
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          if (toggleButton.classList.contains('is-active')) {
+            toggleMenu();
+          }
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (
+          toggleButton.classList.contains('is-active') &&
+          !header.contains(e.target as Node)
+        ) {
+          toggleMenu();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && toggleButton.classList.contains('is-active')) {
           toggleMenu();
         }
       });
     });
-
-    document.addEventListener('click', (e) => {
-      if (
-        toggleButton.classList.contains('is-active') &&
-        !header.contains(e.target as Node)
-      ) {
-        toggleMenu();
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && toggleButton.classList.contains('is-active')) {
-        toggleMenu();
-      }
-    });
-  });
-</script>
+  </script>
+</header>

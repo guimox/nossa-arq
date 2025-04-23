@@ -17,13 +17,12 @@ if (!project) {
 }
 
 const allImages = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/*.{jpg,jpeg,png,gif,webp,svg}'
+  '/src/assets/*/**.{jpg,jpeg,png,gif,webp,svg}'
 );
 
-// Load and optimize all project images
 const optimizedImages = await Promise.all(
   project.images.map(async (imageName) => {
-    const imagePathKey = `/src/assets/${imageName}`;
+    const imagePathKey = `/src/assets/${project.id}/${imageName}`;
 
     if (!allImages[imagePathKey]) {
       throw new Error(
@@ -52,42 +51,35 @@ const optimizedImages = await Promise.all(
 const mainImage = optimizedImages[0];
 ---
 
-<Layout>
-  <section class="mx-auto content-grid py-12 space-y-50 mt-20">
-    <div class="flex w-full mx-auto justify-between flex-col md:flex-row my-20">
+<Layout link="portfolio">
+  <section class="content-grid mx-auto mt-20 space-y-50 py-12">
+    <div class="mx-auto my-20 flex w-full flex-col justify-between md:flex-row">
       <div class="w-full">
         <Title>
           {project.title}
         </Title>
-        <p class="text-lg text-gray-700 mt-6">{project.subtitle}</p>
+        <p class="mt-6 text-lg text-gray-700">{project.subtitle}</p>
       </div>
-      <div class="bg-white p-6 md:w-2/3 border-l flex flex-col gap-2 justify-center">
+      <div class="flex flex-col justify-center gap-2 border-l bg-white p-6 md:w-2/3">
         <Paragraph><span class="font-bold">Tipo:</span> {project.tipo}</Paragraph>
         <Paragraph
-          ><span class="font-bold">Tamanho:</span> {project.area}m²</Paragraph
-        >
-        <Paragraph
-          ><span class="font-bold">Localização:</span>
-          {project.localizacao}</Paragraph
-        >
-        <Paragraph
-          ><span class="font-bold">Cliente:</span> {project.cliente}</Paragraph
+          ><span class="font-bold">Tamanho:</span> {project.tamanho}m²</Paragraph
         >
         <Paragraph><span class="font-bold">Ano:</span> {project.ano}</Paragraph>
       </div>
     </div>
-    <div class="w-full h-fit">
+    <div class="h-fit w-full">
       <Image
         src={mainImage.src}
         width={mainImage.attributes.width}
         height={mainImage.attributes.height / 2}
         alt={project.title}
-        class="w-full h-64 rounded-sm object-cover"
+        class="h-64 w-full rounded-sm object-cover"
       />
     </div>
     <div class="space-y-10">
-      <div class="flex flex-col lg:flex-row gap-20">
-        <div class="flex flex-col w-fit space-y-4">
+      <div class="flex flex-col gap-20 lg:flex-row">
+        <div class="flex w-fit flex-col space-y-4">
           <Subtitle>O Projeto</Subtitle>
           <Paragraph>
             {project.projeto}
@@ -96,7 +88,7 @@ const mainImage = optimizedImages[0];
 
         <div class="w-full">
           <div
-            class="overflow-hidden relative aspect-[16/9] w-full"
+            class="relative aspect-[16/9] w-full overflow-hidden"
             data-slideshow-container
           >
             <div id="slideImages" class="relative h-full w-full">
@@ -113,7 +105,7 @@ const mainImage = optimizedImages[0];
                       width={image.attributes.width}
                       height={image.attributes.height}
                       alt={`Imagem ${index + 1} do projeto ${project.title}`}
-                      class="w-full h-full object-cover"
+                      class="h-full w-full object-cover"
                     />
                   </div>
                 ))
@@ -121,7 +113,7 @@ const mainImage = optimizedImages[0];
             </div>
             <button
               id="prevButton"
-              class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/70 hover:bg-white/90 text-gray-800 font-bold w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none"
+              class="absolute top-1/2 left-4 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 font-bold text-gray-800 transition-all duration-300 hover:scale-110 hover:bg-white/90 focus:outline-none"
               aria-label="Imagem anterior"
             >
               <span class="sr-only">Anterior</span>
@@ -142,7 +134,7 @@ const mainImage = optimizedImages[0];
 
             <button
               id="nextButton"
-              class="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/70 hover:bg-white/90 text-gray-800 font-bold w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none"
+              class="absolute top-1/2 right-4 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 font-bold text-gray-800 transition-all duration-300 hover:scale-110 hover:bg-white/90 focus:outline-none"
               aria-label="Próxima imagem"
             >
               <span class="sr-only">Próxima</span>
@@ -168,7 +160,7 @@ const mainImage = optimizedImages[0];
                 {
                   optimizedImages.map((_, index) => (
                     <button
-                      class={`h-3 w-3 cursor-pointer rounded-full transition-all duration-300 bg-white ${index === 0 ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}
+                      class={`h-3 w-3 cursor-pointer rounded-full bg-white transition-all duration-300 ${index === 0 ? 'scale-110 opacity-100' : 'opacity-50 hover:opacity-75'}`}
                       data-index={index}
                       aria-label={`Ver imagem ${index + 1}`}
                     />

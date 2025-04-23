@@ -10,15 +10,16 @@ interface Props {
   subtitle: string;
   tags?: string[];
   link: string;
+  id: string;
 }
 
-const { image, title, subtitle, link, tags = [] } = Astro.props;
+const { image, title, subtitle, id, link, tags = [] } = Astro.props;
 
 const allImages = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/*.{jpg,jpeg,png,gif,webp,svg}'
+  '/src/assets/*/**.{jpg,jpeg,png,gif,webp,svg}'
 );
 
-const imagePathKey = `/src/assets/${image}`;
+const imagePathKey = `/src/assets/${id}/${image}`;
 
 if (!allImages[imagePathKey]) {
   throw new Error(
@@ -37,7 +38,7 @@ const optimizedImage = await getImage({
 
 <div
   id="card"
-  class="card-arq hover:cursor-pointer group relative flex h-full flex-col rounded overflow-hidden bg-white"
+  class="card-arq group relative flex h-full flex-col overflow-hidden bg-white hover:cursor-pointer"
 >
   <a href={'/portfolio/' + link}>
     <div class="relative aspect-[4/2] w-full overflow-hidden">
@@ -59,13 +60,13 @@ const optimizedImage = await getImage({
     </div>
     <div class="flex flex-col gap-2 py-5">
       <Subtitle
-        class="transition-colors font-bold duration-300 group-hover:text-zinc-700"
+        class="font-bold transition-colors duration-300 group-hover:text-zinc-700"
         >{title}</Subtitle
       >
       <Paragraph class="text-zinc-500">{subtitle}</Paragraph>
       {
         tags.length > 0 && (
-          <div class="mt-2 flex flex-wrap gap-2 tag-container">
+          <div class="tag-container mt-2 flex flex-wrap gap-2">
             {tags.map((tag) => (
               <span class="tag inline-flex items-center rounded bg-zinc-100 px-3 py-1 text-xs text-zinc-600">
                 {tag}
