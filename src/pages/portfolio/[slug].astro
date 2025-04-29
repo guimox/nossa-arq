@@ -5,6 +5,10 @@ import Layout from '../../layout/layout.astro';
 import Title from '../../components/typography/title.astro';
 import Paragraph from '../../components/typography/paragraph.astro';
 import Subtitle from '../../components/typography/subtitle.astro';
+import { cx } from 'class-variance-authority';
+import { join } from 'path';
+import { getPlaiceholder } from 'plaiceholder';
+import { readFile } from 'fs/promises';
 
 export const prerender = false;
 
@@ -49,14 +53,37 @@ const optimizedImages = await Promise.all(
 );
 
 const mainImage = optimizedImages[0];
+
+const getLocalImageWithPlaiceholder = async (relativePath: string) => {
+  const absolutePath = join(process.cwd(), 'src/assets', relativePath);
+  const buffer = await readFile(absolutePath);
+
+  const {
+    metadata: { height, width },
+    ...plaiceholder
+  } = await getPlaiceholder(buffer, { size: 10 });
+
+  return {
+    ...plaiceholder,
+    img: {
+      src: optimizedImages[0],
+      height,
+      width,
+    },
+  };
+};
+
+const { css, img } = await getLocalImageWithPlaiceholder(
+  '1/' + itemsArq[0].images[0]
+);
 ---
 
 <Layout link="portfolio">
-  <section class="content-grid mx-auto mt-20 space-y-50 py-12">
+  <section class="content-grid mx-auto mt-20 space-y-50 py-12 bg-white">
     <div class="mx-auto my-20 flex w-full flex-col justify-between md:flex-row">
       <div class="w-full">
         <Title>
-          {project.title}
+          {project.supertitle} {" "} {project.title}
         </Title>
         <p class="mt-6 text-lg text-gray-700">{project.subtitle}</p>
       </div>
@@ -69,13 +96,30 @@ const mainImage = optimizedImages[0];
       </div>
     </div>
     <div class="h-fit w-full">
-      <Image
-        src={mainImage.src}
-        width={mainImage.attributes.width}
-        height={mainImage.attributes.height / 2}
-        alt={project.title}
-        class="h-64 w-full rounded-sm object-cover"
-      />
+   <div class="h-64 w-full relative">
+    <div
+    style={css}
+    class={cx(
+      'absolute',
+      'inset-0',
+      'w-full',
+      'h-full',
+      'transform',
+      'brightness-50',
+      'scale-150',
+      'filter',
+      'blur-2xl',
+      'z-[-1]'
+    )}
+  />
+    <Image
+      src={mainImage.src}
+      width={mainImage.attributes.width}
+      height={mainImage.attributes.height / 2}
+      alt={project.title}
+      class="h-64 w-full rounded-sm object-cover"
+    />
+   </div>
     </div>
     <div class="space-y-10">
       <div class="flex flex-col gap-20 lg:flex-row">

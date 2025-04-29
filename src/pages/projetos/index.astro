@@ -62,7 +62,7 @@ const allItems = itemsArq;
                 ]}
                 role="button"
               >
-                {tagItem.name}
+                {tagItem.name} 
               </a>
             </li>
           ))
@@ -89,14 +89,7 @@ const allItems = itemsArq;
               item.tags?.map((t) => t.toLowerCase()).join(',') || '';
             return (
               <div class="project-card" data-tags={dataTagsString}>
-                <CardArq
-                  id={item.id}
-                  image={item.images[0]}
-                  title={item.title}
-                  link={item.link}
-                  subtitle={item.subtitle}
-                  tags={item.tags}
-                />
+                <CardArq item={item} />
               </div>
             );
           }

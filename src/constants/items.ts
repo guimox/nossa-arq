@@ -1,7 +1,7 @@
 export const itemsArq = [
   {
     id: '1',
-    superTitle: 'Residência',
+    supertitle: 'Residência',
     title: 'Caraúna',
     subtitle: 'Autêntica, contemporânea, atemporal',
     images: ['image1.png', 'image2.png', 'image3.png'],
@@ -14,7 +14,7 @@ export const itemsArq = [
   },
   {
     id: '2',
-    superTitle: 'Vereda',
+    supertitle: 'Vereda',
     title: 'Residencial',
     subtitle: 'Ritmo, natureza e acolhimento',
     images: ['image1.png'],
@@ -37,7 +37,7 @@ distribuídas ao longo de quatro pavimentos.`,
   },
   {
     id: '3',
-    superTitle: 'Residencial',
+    supertitle: 'Residencial',
     title: 'Solano',
     subtitle: 'Lazer, viver, urbano',
     images: ['image1.png'],
