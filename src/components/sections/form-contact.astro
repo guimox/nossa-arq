@@ -1,101 +1,26 @@
 ---
-import { z } from 'zod';
 import Paragraph from '../typography/paragraph.astro';
+import { actions } from "astro:actions";
+const { form } = Astro.props;
 
-const formSchema = z.object({
-  name: z.string().min(2, { message: 'O nome deve ter pelo menos 2 caracteres.' }),
-  email: z.string().email({ message: 'Por favor, insira um email válido.' }),
-  phone: z
-    .string()
-    .min(8, { message: 'O telefone deve ter pelo menos 8 caracteres.' }),
-  projectType: z.enum(
-    [
-      'predio-residencial',
-      'edificio-comercial',
-      'interiores',
-      'viabilidade',
-      'fachada',
-      'residencia',
-      'reforma',
-      'paisagismo',
-      '',
-    ],
-    {
-      message: 'Por favor, selecione um tipo de projeto.',
-    }
-  ),
-  message: z
-    .string()
-    .min(10, { message: 'A mensagem deve ter pelo menos 10 caracteres.' }),
-});
-
-type FormData = z.infer<typeof formSchema>;
-let errors: Partial<Record<keyof FormData, string>> = {};
-let formData: FormData = {
-  name: '',
-  email: '',
-  phone: '',
-  projectType: '',
-  message: '',
+let formStatus = { 
+  success: form?.success ?? false, 
+  message: form?.message ?? '', 
+  visible: form ? true : false 
 };
-let formStatus = { success: false, message: '', visible: false };
 
-if (Astro.request.method === 'POST') {
-  try {
-    const data = await Astro.request.formData();
-    const formValues = {
-      name: data.get('name')?.toString() || '',
-      email: data.get('email')?.toString() || '',
-      phone: data.get('phone')?.toString() || '',
-      message: data.get('message')?.toString() || '',
-      projectType: data.get('projectType')?.toString() || '',
-    };
+const formData = {
+  name: form?.data?.name ?? '',
+  email: form?.data?.email ?? '',
+  phone: form?.data?.phone ?? '',
+  projectType: form?.data?.projectType ?? '',
+  message: form?.data?.message ?? '',
+  cfTurnstileResponse: form?.data?.cfTurnstileResponse ?? ''
+};
 
-    const result = formSchema.safeParse(formValues);
+const errors = form?.errors ?? {};
 
-    if (result.success) {
-      formData = result.data;
-      console.log('Dados do formulário enviados com sucesso:', formData);
-
-      formStatus = {
-        success: true,
-        message: 'Obrigado pelo seu contato. Responderemos em breve.',
-        visible: true,
-      };
-
-      formData = {
-        name: '',
-        email: '',
-        phone: '',
-        projectType: '' as const,
-        message: '',
-      };
-    } else {
-      formData = formValues as FormData;
-      errors = {};
-
-      result.error.issues.forEach((issue) => {
-        if (issue.path[0]) {
-          errors[issue.path[0] as keyof FormData] = issue.message;
-        }
-      });
-
-      formStatus = {
-        success: false,
-        message: 'Por favor, corrija os erros abaixo.',
-        visible: true,
-      };
-    }
-  } catch (error) {
-    console.error('Erro ao processar formulário:', error);
-    formStatus = {
-      success: false,
-      message:
-        'Houve um problema ao enviar o formulário. Por favor, tente novamente mais tarde.',
-      visible: true,
-    };
-  }
-}
+const cfTurnstileSiteKey = import.meta.env.PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
 ---
 
 <div class="w-full max-w-2xl rounded">
@@ -109,11 +34,11 @@ if (Astro.request.method === 'POST') {
     )
   }
 
-  <form method="POST" enctype="application/x-www-form-urlencoded" class="space-y-6">
+  <form action={actions.contactSubmit} method="post" class="space-y-6" id="contactForm" novalidate>
     <div>
-      <label for="name" class="mb-1 block text-sm font-medium text-gray-700"
-        >Nome</label
-      >
+      <label for="name" class="mb-1 block text-sm font-medium text-gray-700">
+        Nome
+      </label>
       <input
         type="text"
         id="name"
@@ -123,6 +48,7 @@ if (Astro.request.method === 'POST') {
         required
         class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
       />
+      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="name"></span>
       {
         errors.name && (
           <Paragraph class="mt-1 text-sm text-red-600">{errors.name}</Paragraph>
@@ -131,9 +57,9 @@ if (Astro.request.method === 'POST') {
     </div>
 
     <div>
-      <label for="email" class="mb-1 block text-sm font-medium text-gray-700"
-        >Email</label
-      >
+      <label for="email" class="mb-1 block text-sm font-medium text-gray-700">
+        Email
+      </label>
       <input
         type="email"
         id="email"
@@ -143,6 +69,7 @@ if (Astro.request.method === 'POST') {
         required
         class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
       />
+      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="email"></span>
       {
         errors.email && (
           <Paragraph class="mt-1 text-sm text-red-600">{errors.email}</Paragraph>
@@ -151,9 +78,9 @@ if (Astro.request.method === 'POST') {
     </div>
 
     <div>
-      <label for="phone" class="mb-1 block text-sm font-medium text-gray-700"
-        >Telefone</label
-      >
+      <label for="phone" class="mb-1 block text-sm font-medium text-gray-700">
+        Telefone
+      </label>
       <input
         type="tel"
         id="phone"
@@ -163,6 +90,7 @@ if (Astro.request.method === 'POST') {
         required
         class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
       />
+      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="phone"></span>
       {
         errors.phone && (
           <Paragraph class="mt-1 text-sm text-red-600">{errors.phone}</Paragraph>
@@ -171,63 +99,74 @@ if (Astro.request.method === 'POST') {
     </div>
 
     <div>
-      <label for="projectType" class="mb-1 block text-sm font-medium text-gray-700"
-        >Tipo de projeto</label
-      >
+      <label for="projectType" class="mb-1 block text-sm font-medium text-gray-700">
+        Tipo de projeto
+      </label>
       <select
         id="projectType"
         name="projectType"
         required
         class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm invalid:text-[#9e9eae] focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
       >
-        <option value="" disabled selected hidden>Selecione</option>
+        <option value="" disabled selected={!formData.projectType}>Selecione</option>
         <option
           value="predio-residencial"
           class="text-gray-500"
           selected={formData.projectType === 'predio-residencial'}
-          >Prédio Residencial</option
         >
+          Prédio Residencial
+        </option>
         <option
           value="edificio-comercial"
           class="text-gray-500"
           selected={formData.projectType === 'edificio-comercial'}
-          >Edifício Comercial</option
         >
+          Edifício Comercial
+        </option>
         <option
           value="interiores"
           class="text-gray-500"
           selected={formData.projectType === 'interiores'}
-          >Projeto de interiores</option
         >
+          Projeto de interiores
+        </option>
         <option
           value="viabilidade"
           class="text-gray-500"
           selected={formData.projectType === 'viabilidade'}
-          >Estudo de viabilidade</option
         >
+          Estudo de viabilidade
+        </option>
         <option
           value="fachada"
           class="text-gray-500"
-          selected={formData.projectType === 'fachada'}>Estudo de fachada</option
+          selected={formData.projectType === 'fachada'}
         >
+          Estudo de fachada
+        </option>
         <option
           value="residencia"
           class="text-gray-500"
           selected={formData.projectType === 'residencia'}
-          >Residência unifamiliar</option
         >
+          Residência unifamiliar
+        </option>
         <option
           value="reforma"
           class="text-gray-500"
-          selected={formData.projectType === 'reforma'}>Projeto de reforma</option
+          selected={formData.projectType === 'reforma'}
         >
+          Projeto de reforma
+        </option>
         <option
           value="paisagismo"
           class="text-gray-500"
           selected={formData.projectType === 'paisagismo'}
-          >Projeto de paisagismo</option
         >
+          Projeto de paisagismo
+        </option>
       </select>
+      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="projectType"></span>
       {
         errors.projectType && (
           <Paragraph class="mt-1 text-sm text-red-600">
@@ -238,17 +177,17 @@ if (Astro.request.method === 'POST') {
     </div>
 
     <div>
-      <label for="message" class="mb-1 block text-sm font-medium text-gray-700"
-        >Mensagem</label
-      >
+      <label for="message" class="mb-1 block text-sm font-medium text-gray-700">
+        Mensagem
+      </label>
       <textarea
         id="message"
         name="message"
         placeholder="Digite sua mensagem aqui"
         required
         class="min-h-32 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
-        >{formData.message}</textarea
-      >
+      >{formData.message}</textarea>
+      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="message"></span>
       {
         errors.message && (
           <Paragraph class="mt-1 text-sm text-red-600">{errors.message}</Paragraph>
@@ -256,11 +195,163 @@ if (Astro.request.method === 'POST') {
       }
     </div>
 
+    <div class="cf-turnstile" data-sitekey={cfTurnstileSiteKey} data-callback="turnstileCallback"></div>
+    <input type="hidden" name="cfTurnstileResponse" id="cfTurnstileResponse" value="" />
+    
+    {
+      errors.cfTurnstileResponse && (
+        <Paragraph class="mt-1 text-sm text-red-600">{errors.cfTurnstileResponse}</Paragraph>
+      )
+    }
+
     <button
       type="submit"
-      class="hover:opacit-50 w-fit rounded-md bg-zinc-800 px-4 py-1 font-medium text-white transition duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
+      class="hover:opacity-50 hover:cursor-pointer w-fit rounded-md bg-zinc-800 px-4 py-1 font-medium text-white transition duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
+      id="submitButton"
     >
       Enviar
     </button>
   </form>
 </div>
+
+<script is:inline>
+  window.turnstileCallback = function(token) {
+    document.getElementById('cfTurnstileResponse').value = token;
+  };
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm') as HTMLFormElement;
+    if (!form) return;
+    
+    const validationRules = {
+      name: {
+        validate: (value: string) => {
+          return value.trim().length >= 3;
+        },
+        message: 'Por favor, insira um nome válido (mínimo 3 caracteres)'
+      },
+      email: {
+        validate: (value: string) => {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(value);
+        },
+        message: 'Por favor, insira um email válido'
+      },
+      phone: {
+        validate: (value: string) => {
+          const phoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+          return phoneRegex.test(value);
+        },
+        message: 'Por favor, insira um telefone válido no formato (00) 00000-0000'
+      },
+      projectType: {
+        validate: (value: string) => {
+          return value !== '' && value !== null;
+        },
+        message: 'Por favor, selecione um tipo de projeto'
+      },
+      message: {
+        validate: (value: string) => {
+          return value.trim().length >= 10;
+        },
+        message: 'Por favor, insira uma mensagem com pelo menos 10 caracteres'
+      }
+    };
+
+    const phoneInput = document.getElementById('phone') as HTMLInputElement;
+    if (phoneInput) {
+      phoneInput.addEventListener('input', (e) => {
+        const target = e.target as HTMLInputElement;
+        let value = target.value.replace(/\D/g, ''); 
+        
+        if (value.length > 0) {
+          value = '(' + value;
+        }
+        if (value.length > 3) {
+          value = value.substring(0, 3) + ') ' + value.substring(3);
+        }
+        if (value.length > 10) {
+          value = value.substring(0, 10) + '-' + value.substring(10);
+        }
+        
+        if (value.length > 15) {
+          value = value.substring(0, 15);
+        }
+        
+        target.value = value;
+      });
+    }
+
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    inputs.forEach((input) => {
+      const field = input as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+      const fieldName = field.name;
+      
+      if (fieldName && fieldName in validationRules) {
+        field.addEventListener('blur', () => {
+          validateField(field);
+        });
+      }
+    });
+
+    function validateField(field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) {
+      const fieldName = field.name;
+      const rule = validationRules[fieldName as keyof typeof validationRules];
+      const messageElement = document.querySelector(`.validation-message[data-for="${fieldName}"]`);
+      
+      if (!rule || !messageElement) return;
+      
+      const isValid = rule.validate(field.value);
+      
+      if (!isValid && field.value.trim() !== '') {
+        messageElement.textContent = rule.message;
+        messageElement.classList.remove('hidden');
+        field.classList.add('border-red-500');
+      } else {
+        messageElement.textContent = '';
+        messageElement.classList.add('hidden');
+        field.classList.remove('border-red-500');
+      }
+      
+      return isValid ?? true;
+    }
+
+    function validateAllFields() {
+      let isValid = true;
+      
+      inputs.forEach((input) => {
+        const field = input as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+        const fieldName = field.name;
+        
+        if (fieldName && fieldName in validationRules) {
+          const fieldValid = validateField(field);
+          isValid = fieldValid! && isValid;
+        }
+      });
+      
+      return isValid;
+    }
+
+    form.addEventListener('submit', (e) => {
+      const isValid = validateAllFields();
+      
+      if (!isValid) {
+        e.preventDefault();
+        return false;
+      }
+      
+      const turnstileElement = document.getElementById('cfTurnstileResponse');
+      const turnstileResponse = turnstileElement ? (turnstileElement as HTMLInputElement).value : '';
+      if (!turnstileResponse) {
+        e.preventDefault();
+        alert('Por favor, complete a verificação de segurança');
+        return false;
+      }
+    });
+  });
+</script>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
