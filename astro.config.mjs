@@ -8,7 +8,13 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
   adapter: cloudflare(),
   integrations: [react()],
+  vite: {
+    resolve: {
+      alias: import.meta.env.PROD && {
+        "react-dom/server": "react-dom/server.edge",
+      },
+    },
+  },
 });
