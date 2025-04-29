@@ -13,17 +13,20 @@ const isLinkActive = (path: string) =>
 
 <header
   class:list={[
-    'content-grid absolute top-0 z-30 mx-auto w-full border-b bg-transparent',
+    'fixed top-0 z-30 w-full border-b',
+    isHomePage ? 'bg-transparent' : 'bg-white',
     headerTextColor,
   ]}
   id="main-header"
 >
   <div
-    class="mx-auto flex h-20 w-full max-w-[1700px] items-center justify-between text-lg"
+    class="mx-auto flex h-16 w-full max-w-[1700px] items-center justify-between px-4 text-lg"
   >
     <div class={`text-xl font-bold ${headerTextColor}`}>
       <a href="/" class={`font-bold ${headerTextColor}`}>Nossa Arquitetura</a>
     </div>
+    
+    <!-- Desktop Navigation -->
     <nav class="hidden items-center space-x-8 md:flex lg:space-x-10">
       <a
         href="/sobre"
@@ -44,45 +47,47 @@ const isLinkActive = (path: string) =>
         Contato
       </a>
     </nav>
+
+    <!-- Mobile Menu Button -->
+    <button
+      class="group relative z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded p-1 md:hidden"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      id="nav-toggle"
+    >
+      <span class="sr-only">Open main menu</span>
+      <div class="relative block h-full w-full">
+        <span
+          id="bar1"
+          class:list={[
+            'absolute top-[calc(50%-6px)] left-1/2 block h-0.5 w-6 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
+            barColor,
+            'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:rotate-45',
+          ]}></span>
+        <span
+          id="bar2"
+          class:list={[
+            'absolute top-1/2 left-1/2 block h-0.5 w-6 -translate-x-1/2 -translate-y-1/2 transform rounded-full transition-opacity duration-300 ease-in-out',
+            barColor,
+            'group-[.is-active]:opacity-0',
+          ]}></span>
+        <span
+          id="bar3"
+          class:list={[
+            'absolute top-[calc(50%+6px)] left-1/2 block h-0.5 w-6 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
+            barColor,
+            'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:-rotate-45',
+          ]}></span>
+      </div>
+    </button>
   </div>
 
-  <button
-    class="group relative z-50 flex h-8 w-8 cursor-pointer items-center justify-center rounded p-1 md:hidden"
-    aria-label="Toggle navigation menu"
-    aria-expanded="false"
-    aria-controls="mobile-menu"
-    id="nav-toggle"
-  >
-    <span class="sr-only">Open main menu</span>
-    <div class="relative block h-full w-full">
-      <span
-        id="bar1"
-        class:list={[
-          'absolute top-[calc(50%-6px)] left-1/2 block h-0.5 w-5 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
-          barColor,
-          'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:rotate-45',
-        ]}></span>
-      <span
-        id="bar2"
-        class:list={[
-          'absolute top-1/2 left-1/2 block h-[1.5px] w-5 -translate-x-1/2 -translate-y-1/2 transform rounded-full transition-opacity duration-300 ease-in-out',
-          barColor,
-          'group-[.is-active]:opacity-0',
-        ]}></span>
-      <span
-        id="bar3"
-        class:list={[
-          'absolute top-[calc(50%+5px)] left-1/2 block h-0.5 w-5 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
-          barColor,
-          'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:-rotate-45',
-        ]}></span>
-    </div>
-  </button>
-
+  <!-- Mobile Menu -->
   <div
     id="mobile-menu"
     class:list={[
-      'absolute top-full left-0 z-40 w-full transform overflow-hidden md:hidden',
+      'fixed top-16 left-0 z-40 w-full transform overflow-hidden md:hidden',
       'transition-all duration-300 ease-in-out',
       mobileMenuBg,
       'invisible max-h-0 opacity-0',
@@ -130,13 +135,14 @@ const isLinkActive = (path: string) =>
         if (!isActive) {
           mobileMenu.classList.remove('max-h-0', 'opacity-0', 'invisible');
           mobileMenu.classList.add(
-            'max-h-[calc(100vh-5rem)]',
+            'max-h-[calc(100vh-4rem)]',
             'opacity-100',
             'visible',
             'border-t',
-            'border-zinc-300/20'
+            'border-zinc-300/20',
+            'shadow-lg'
           );
-          if (header.classList.contains('text-white')) {
+          if (header.classList.contains('text-white') && header.classList.contains('bg-transparent')) {
             header.classList.add('bg-zinc-800/95');
           }
         } else {
@@ -144,14 +150,14 @@ const isLinkActive = (path: string) =>
           setTimeout(() => {
             if (!toggleButton.classList.contains('is-active')) {
               mobileMenu.classList.add('invisible');
-              mobileMenu.classList.remove('border-t');
-              if (header.classList.contains('text-white')) {
+              mobileMenu.classList.remove('border-t', 'shadow-lg');
+              if (header.classList.contains('text-white') && !window.scrollY) {
                 header.classList.remove('bg-zinc-800/95');
               }
             }
           }, 300);
           mobileMenu.classList.remove(
-            'max-h-[calc(100vh-5rem)]',
+            'max-h-[calc(100vh-4rem)]',
             'opacity-100',
             'visible'
           );
@@ -186,6 +192,28 @@ const isLinkActive = (path: string) =>
           toggleMenu();
         }
       });
+
+      let isScrolled = false;
+      const isHomePage = Astro.url.pathname === '/';
+
+      const checkScroll = () => {
+        if (window.scrollY > 10 && !isScrolled) {
+          isScrolled = true;
+          if (header.classList.contains('bg-transparent')) {
+            header.classList.add(isHomePage ? 'bg-zinc-800/95' : 'bg-white/95');
+            header.classList.add('shadow-sm');
+          }
+        } else if (window.scrollY <= 10 && isScrolled) {
+          isScrolled = false;
+          if (!toggleButton.classList.contains('is-active')) {
+            header.classList.remove(isHomePage ? 'bg-zinc-800/95' : 'bg-white/95');
+            header.classList.remove('shadow-sm');
+          }
+        }
+      };
+
+      window.addEventListener('scroll', checkScroll);
+      checkScroll(); 
     });
   </script>
 </header>
