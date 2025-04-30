@@ -29,6 +29,21 @@ const formSchema = z.object({
   cfTurnstileResponse: z.string().min(1, { message: 'Verificação de segurança necessária' })
 });
 
+
+function formatProjectType(type: string): string {
+  const formatMap: Record<string, string> = {
+    'predio-residencial': 'Prédio Residencial',
+    'edificio-comercial': 'Edifício Comercial',
+    'interiores': 'Interiores',
+    'viabilidade': 'Viabilidade',
+    'fachada': 'Fachada',
+    'residencia': 'Residência',
+    'reforma': 'Reforma',
+    'paisagismo': 'Paisagismo'
+  };
+  return formatMap[type] || type;
+}
+
 async function validateTurnstileToken(token: string): Promise<boolean> {
     const secretKey = import.meta.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
     
@@ -96,19 +111,12 @@ export const server = {
         const payload = {
           from: "Nossa Arquitetura - Contato <form@nossa.arq.br>",
           to: ["contato@nossa.arq.br"],
-          subject: `Novo contato: ${projectType}`,
-          html,
+          subject: `Novo contato: ${formatProjectType(projectType)}`,
           text,
           replyTo: email,
         };
-        console.log("Attempting to send email with payload:", JSON.stringify(payload, null, 2)); // Log the payload being sent
 
         const { data, error } = await resend.emails.send(payload);
-
-        console.log("--- Resend API Response ---");
-        console.log("Data:", data);
-        console.log("Error:", error);
-        console.log("---------------------------");
 
         if (error) {
           console.error("Email sending error:", error);

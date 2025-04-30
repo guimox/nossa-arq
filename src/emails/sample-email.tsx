@@ -1,84 +1,103 @@
 import {
-    Body,
-    Container,
-    Head,
-    Heading,
-    Hr,
-    Html,
-    Preview,
-    Section,
-    Text
+  Body,
+  Container,
+  Head,
+  Heading,
+  Hr,
+  Html,
+  Preview,
+  Section,
+  Text,
 } from '@react-email/components';
 
 const projectTypeMap: Record<string, string> = {
-    'predio-residencial': 'Prédio Residencial',
-    'edificio-comercial': 'Edifício Comercial',
-    'interiores': 'Projeto de interiores',
-    'viabilidade': 'Estudo de viabilidade',
-    'fachada': 'Estudo de fachada',
-    'residencia': 'Residência unifamiliar',
-    'reforma': 'Projeto de reforma',
-    'paisagismo': 'Projeto de paisagismo'
-  };
-  
+  'predio-residencial': 'Prédio Residencial',
+  'edificio-comercial': 'Edifício Comercial',
+  interiores: 'Projeto de interiores',
+  viabilidade: 'Estudo de viabilidade',
+  fachada: 'Estudo de fachada',
+  residencia: 'Residência unifamiliar',
+  reforma: 'Projeto de reforma',
+  paisagismo: 'Projeto de paisagismo',
+};
 
 interface SampleEmailProps {
-    name?: string;
-    email?: string;
-    phone?: string;
-    projectType?: string;
-    message?: string;
-    username?: string; // For the simple username case  
+  name?: string;
+  email?: string;
+  phone?: string;
+  projectType?: string;
+  message?: string;
+  username?: string; // For the simple username case
 }
 
-export default function SampleEmail({ name, email, phone, projectType, message, username }:SampleEmailProps) {
+export default function SampleEmail({
+  name,
+  email,
+  phone,
+  projectType,
+  message,
+  username,
+}: SampleEmailProps) {
   const isContactForm = name && email && phone && projectType && message;
-  
+
   return (
     <Html>
       <Head />
       <Preview>
-        {isContactForm 
+        {isContactForm
           ? `Novo formulário de contato de ${name}`
           : 'Bem-vindo ao nosso serviço!'}
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>
-            {isContactForm 
+            {isContactForm
               ? 'Novo formulário de contato recebido'
               : `Olá ${username}!`}
           </Heading>
-          
+
           {isContactForm ? (
             <Section>
-              <Text style={text}>Um novo contato foi recebido com os seguintes detalhes:</Text>
-              
-              <Text style={text}><strong>Nome:</strong> {name}</Text>
-              <Text style={text}><strong>Email:</strong> {email}</Text>
-              <Text style={text}><strong>Telefone:</strong> {phone}</Text>
               <Text style={text}>
-                <strong>Tipo de projeto:</strong> {projectTypeMap[projectType] || projectType}
+                Um novo contato foi recebido com os seguintes detalhes:
               </Text>
-              
+
+              <Text style={text}>
+                <strong>Nome:</strong> {name}
+              </Text>
+              <Text style={text}>
+                <strong>Email:</strong> {email}
+              </Text>
+              <Text style={text}>
+                <strong>Telefone:</strong> {phone}
+              </Text>
+              <Text style={text}>
+                <strong>Tipo de projeto:</strong>{' '}
+                {projectTypeMap[projectType] || projectType}
+              </Text>
+
               <Hr style={hr} />
-              
-              <Text style={text}><strong>Mensagem:</strong></Text>
+
+              <Text style={text}>
+                <strong>Mensagem:</strong>
+              </Text>
               <Text style={text}>{message}</Text>
             </Section>
           ) : (
             <Section>
               <Text style={text}>Obrigado por se cadastrar em nosso serviço!</Text>
               <Text style={text}>
-                Esta é uma mensagem de confirmação para informar que o seu cadastro foi realizado com sucesso.
+                Esta é uma mensagem de confirmação para informar que o seu cadastro
+                foi realizado com sucesso.
               </Text>
             </Section>
           )}
-          
+
           <Hr style={hr} />
-          
+
           <Text style={footer}>
-            © {new Date().getFullYear()} Sua Empresa. Todos os direitos reservados.
+            © {new Date().getFullYear()} Nossa Arquitetura. Todos os direitos
+            reservados.
           </Text>
         </Container>
       </Body>
@@ -89,7 +108,8 @@ export default function SampleEmail({ name, email, phone, projectType, message, 
 // Styling
 const main = {
   backgroundColor: '#f6f9fc',
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
 };
 
 const container = {

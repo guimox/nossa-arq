@@ -7,6 +7,8 @@ import Maintenance from '../components/sections/maintenance.astro';
 import '../styles/global.css';
 import '../styles/animate.css';
 
+import LoadingOverlay from '../components/sections/loading-overlay.astro';
+
 const isHomePage = Astro.url.pathname === '/';
 const MAINTENANCE_MODE = import.meta.env.MAINTENANCE_MODE === 'true';
 const { link } = Astro.props;
@@ -37,6 +39,7 @@ const { link } = Astro.props;
         <>
           <Header link={link} />
           <Cursor />
+          <LoadingOverlay />
           <main class="w-full">
             <slot />
           </main>
