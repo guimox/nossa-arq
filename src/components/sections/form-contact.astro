@@ -1,271 +1,287 @@
 ---
 import Paragraph from '../typography/paragraph.astro';
-import { actions } from "astro:actions";
-const { form } = Astro.props;
-
-let formStatus = { 
-  success: form?.success ?? false, 
-  message: form?.message ?? '', 
-  visible: form ? true : false 
-};
-
-const formData = {
-  name: form?.data?.name ?? '',
-  email: form?.data?.email ?? '',
-  phone: form?.data?.phone ?? '',
-  projectType: form?.data?.projectType ?? '',
-  message: form?.data?.message ?? '',
-  cfTurnstileResponse: form?.data?.cfTurnstileResponse ?? ''
-};
-
-const errors = form?.errors ?? {};
+import { actions } from 'astro:actions';
 
 const cfTurnstileSiteKey = import.meta.env.PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
+
+interface FormData {
+  name?: string;
+  email?: string;
+  phone?: string;
+  projectType?: string;
+  message?: string;
+}
+
+const formData: FormData = {
+  name: '',
+  email: '',
+  phone: '',
+  projectType: '',
+  message: '',
+};
+
+const errors: Record<string, string> = {};
 ---
 
-<div class="w-full max-w-2xl rounded">
-  {
-    formStatus.visible && (
-      <div
-        class={`mb-6 rounded-md border p-4 ${formStatus.success ? 'border-green-200 bg-green-50 text-green-800' : 'border-red-200 bg-red-50 text-red-800'}`}
+<form method="post" class="max-w-2xl space-y-6" id="contactForm">
+  <div>
+    <label for="name" class="mb-1 block text-sm font-medium text-gray-700">
+      Nome
+    </label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      placeholder="Seu nome completo"
+      required
+      class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+    />
+    <span class="validation-message mt-1 hidden text-sm text-red-600" data-for="name"
+    ></span>
+    {
+      errors.name && (
+        <Paragraph class="mt-1 text-sm text-red-600">{errors.name}</Paragraph>
+      )
+    }
+  </div>
+
+  <div>
+    <label for="email" class="mb-1 block text-sm font-medium text-gray-700">
+      Email
+    </label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      placeholder="seu.email@exemplo.com"
+      value={formData.email}
+      required
+      class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+    />
+    <span
+      class="validation-message mt-1 hidden text-sm text-red-600"
+      data-for="email"></span>
+    {
+      errors.email && (
+        <Paragraph class="mt-1 text-sm text-red-600">{errors.email}</Paragraph>
+      )
+    }
+  </div>
+
+  <div>
+    <label for="phone" class="mb-1 block text-sm font-medium text-gray-700">
+      Telefone
+    </label>
+    <input
+      type="tel"
+      id="phone"
+      name="phone"
+      placeholder="(00) 00000-0000"
+      value={formData.phone}
+      required
+      class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+    />
+    <span
+      class="validation-message mt-1 hidden text-sm text-red-600"
+      data-for="phone"></span>
+    {
+      errors.phone && (
+        <Paragraph class="mt-1 text-sm text-red-600">{errors.phone}</Paragraph>
+      )
+    }
+  </div>
+
+  <div>
+    <label for="projectType" class="mb-1 block text-sm font-medium text-gray-700">
+      Tipo de projeto
+    </label>
+    <select
+      id="projectType"
+      name="projectType"
+      required
+      class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm invalid:text-[#9e9eae] focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+    >
+      <option value="" disabled selected={!formData.projectType}>Selecione</option>
+      <option
+        value="predio-residencial"
+        class="text-gray-500"
+        selected={formData.projectType === 'predio-residencial'}
       >
-        <Paragraph>{formStatus.message}</Paragraph>
-      </div>
+        Prédio Residencial
+      </option>
+      <option
+        value="edificio-comercial"
+        class="text-gray-500"
+        selected={formData.projectType === 'edificio-comercial'}
+      >
+        Edifício Comercial
+      </option>
+      <option
+        value="interiores"
+        class="text-gray-500"
+        selected={formData.projectType === 'interiores'}
+      >
+        Projeto de interiores
+      </option>
+      <option
+        value="viabilidade"
+        class="text-gray-500"
+        selected={formData.projectType === 'viabilidade'}
+      >
+        Estudo de viabilidade
+      </option>
+      <option
+        value="fachada"
+        class="text-gray-500"
+        selected={formData.projectType === 'fachada'}
+      >
+        Estudo de fachada
+      </option>
+      <option
+        value="residencia"
+        class="text-gray-500"
+        selected={formData.projectType === 'residencia'}
+      >
+        Residência unifamiliar
+      </option>
+      <option
+        value="reforma"
+        class="text-gray-500"
+        selected={formData.projectType === 'reforma'}
+      >
+        Projeto de reforma
+      </option>
+      <option
+        value="paisagismo"
+        class="text-gray-500"
+        selected={formData.projectType === 'paisagismo'}
+      >
+        Projeto de paisagismo
+      </option>
+    </select>
+    <span
+      class="validation-message mt-1 hidden text-sm text-red-600"
+      data-for="projectType"></span>
+    {
+      errors.projectType && (
+        <Paragraph class="mt-1 text-sm text-red-600">{errors.projectType}</Paragraph>
+      )
+    }
+  </div>
+
+  <div>
+    <label for="message" class="mb-1 block text-sm font-medium text-gray-700">
+      Mensagem
+    </label>
+    <textarea
+      id="message"
+      name="message"
+      placeholder="Digite sua mensagem aqui"
+      required
+      class="min-h-32 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+      >{formData.message}</textarea
+    >
+    <span
+      class="validation-message mt-1 hidden text-sm text-red-600"
+      data-for="message"></span>
+    {
+      errors.message && (
+        <Paragraph class="mt-1 text-sm text-red-600">{errors.message}</Paragraph>
+      )
+    }
+  </div>
+
+  <div
+    class="cf-turnstile"
+    data-sitekey={cfTurnstileSiteKey}
+    data-callback="turnstileCallback"
+  >
+  </div>
+  <input
+    type="hidden"
+    name="cfTurnstileResponse"
+    id="cfTurnstileResponse"
+    value=""
+  />
+
+  {
+    errors.cfTurnstileResponse && (
+      <Paragraph class="mt-1 text-sm text-red-600">
+        {errors.cfTurnstileResponse}
+      </Paragraph>
     )
   }
 
-  <form action={actions.contactSubmit} method="post" class="space-y-6" id="contactForm" novalidate>
-    <div>
-      <label for="name" class="mb-1 block text-sm font-medium text-gray-700">
-        Nome
-      </label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        placeholder="Seu nome completo"
-        value={formData.name}
-        required
-        class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
-      />
-      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="name"></span>
-      {
-        errors.name && (
-          <Paragraph class="mt-1 text-sm text-red-600">{errors.name}</Paragraph>
-        )
-      }
-    </div>
-
-    <div>
-      <label for="email" class="mb-1 block text-sm font-medium text-gray-700">
-        Email
-      </label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        placeholder="seu.email@exemplo.com"
-        value={formData.email}
-        required
-        class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
-      />
-      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="email"></span>
-      {
-        errors.email && (
-          <Paragraph class="mt-1 text-sm text-red-600">{errors.email}</Paragraph>
-        )
-      }
-    </div>
-
-    <div>
-      <label for="phone" class="mb-1 block text-sm font-medium text-gray-700">
-        Telefone
-      </label>
-      <input
-        type="tel"
-        id="phone"
-        name="phone"
-        placeholder="(00) 00000-0000"
-        value={formData.phone}
-        required
-        class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
-      />
-      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="phone"></span>
-      {
-        errors.phone && (
-          <Paragraph class="mt-1 text-sm text-red-600">{errors.phone}</Paragraph>
-        )
-      }
-    </div>
-
-    <div>
-      <label for="projectType" class="mb-1 block text-sm font-medium text-gray-700">
-        Tipo de projeto
-      </label>
-      <select
-        id="projectType"
-        name="projectType"
-        required
-        class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm invalid:text-[#9e9eae] focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
-      >
-        <option value="" disabled selected={!formData.projectType}>Selecione</option>
-        <option
-          value="predio-residencial"
-          class="text-gray-500"
-          selected={formData.projectType === 'predio-residencial'}
-        >
-          Prédio Residencial
-        </option>
-        <option
-          value="edificio-comercial"
-          class="text-gray-500"
-          selected={formData.projectType === 'edificio-comercial'}
-        >
-          Edifício Comercial
-        </option>
-        <option
-          value="interiores"
-          class="text-gray-500"
-          selected={formData.projectType === 'interiores'}
-        >
-          Projeto de interiores
-        </option>
-        <option
-          value="viabilidade"
-          class="text-gray-500"
-          selected={formData.projectType === 'viabilidade'}
-        >
-          Estudo de viabilidade
-        </option>
-        <option
-          value="fachada"
-          class="text-gray-500"
-          selected={formData.projectType === 'fachada'}
-        >
-          Estudo de fachada
-        </option>
-        <option
-          value="residencia"
-          class="text-gray-500"
-          selected={formData.projectType === 'residencia'}
-        >
-          Residência unifamiliar
-        </option>
-        <option
-          value="reforma"
-          class="text-gray-500"
-          selected={formData.projectType === 'reforma'}
-        >
-          Projeto de reforma
-        </option>
-        <option
-          value="paisagismo"
-          class="text-gray-500"
-          selected={formData.projectType === 'paisagismo'}
-        >
-          Projeto de paisagismo
-        </option>
-      </select>
-      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="projectType"></span>
-      {
-        errors.projectType && (
-          <Paragraph class="mt-1 text-sm text-red-600">
-            {errors.projectType}
-          </Paragraph>
-        )
-      }
-    </div>
-
-    <div>
-      <label for="message" class="mb-1 block text-sm font-medium text-gray-700">
-        Mensagem
-      </label>
-      <textarea
-        id="message"
-        name="message"
-        placeholder="Digite sua mensagem aqui"
-        required
-        class="min-h-32 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
-      >{formData.message}</textarea>
-      <span class="validation-message mt-1 text-sm text-red-600 hidden" data-for="message"></span>
-      {
-        errors.message && (
-          <Paragraph class="mt-1 text-sm text-red-600">{errors.message}</Paragraph>
-        )
-      }
-    </div>
-
-    <div class="cf-turnstile" data-sitekey={cfTurnstileSiteKey} data-callback="turnstileCallback"></div>
-    <input type="hidden" name="cfTurnstileResponse" id="cfTurnstileResponse" value="" />
-    
-    {
-      errors.cfTurnstileResponse && (
-        <Paragraph class="mt-1 text-sm text-red-600">{errors.cfTurnstileResponse}</Paragraph>
-      )
-    }
-
-    <button
-      type="submit"
-      class="hover:opacity-50 hover:cursor-pointer w-fit rounded-md bg-zinc-800 px-4 py-1 font-medium text-white transition duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
-      id="submitButton"
-    >
-      Enviar
-    </button>
-  </form>
-</div>
+  <button
+    type="submit"
+    class="w-fit rounded-md bg-zinc-800 px-4 py-1 font-medium text-white transition duration-200 hover:cursor-pointer hover:opacity-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
+    id="submitButton"
+  >
+    Enviar
+  </button>
+</form>
 
 <script is:inline>
-  window.turnstileCallback = function(token) {
+  window.turnstileCallback = function (token) {
     document.getElementById('cfTurnstileResponse').value = token;
   };
 </script>
 
 <script>
+  import { actions } from 'astro:actions';
+
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm') as HTMLFormElement;
     if (!form) return;
-    
-    const validationRules = {
+
+    interface ValidationRules {
+      [key: string]: {
+        validate: (value: string) => boolean;
+        message: string;
+      };
+    }
+
+    const validationRules: ValidationRules = {
       name: {
         validate: (value: string) => {
           return value.trim().length >= 3;
         },
-        message: 'Por favor, insira um nome válido (mínimo 3 caracteres)'
+        message: 'Por favor, insira um nome válido (mínimo 3 caracteres)',
       },
       email: {
         validate: (value: string) => {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           return emailRegex.test(value);
         },
-        message: 'Por favor, insira um email válido'
+        message: 'Por favor, insira um email válido',
       },
       phone: {
         validate: (value: string) => {
           const phoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
           return phoneRegex.test(value);
         },
-        message: 'Por favor, insira um telefone válido no formato (00) 00000-0000'
+        message: 'Por favor, insira um telefone válido no formato (00) 00000-0000',
       },
       projectType: {
         validate: (value: string) => {
           return value !== '' && value !== null;
         },
-        message: 'Por favor, selecione um tipo de projeto'
+        message: 'Por favor, selecione um tipo de projeto',
       },
       message: {
         validate: (value: string) => {
           return value.trim().length >= 10;
         },
-        message: 'Por favor, insira uma mensagem com pelo menos 10 caracteres'
-      }
+        message: 'Por favor, insira uma mensagem com pelo menos 10 caracteres',
+      },
     };
 
     const phoneInput = document.getElementById('phone') as HTMLInputElement;
     if (phoneInput) {
       phoneInput.addEventListener('input', (e) => {
         const target = e.target as HTMLInputElement;
-        let value = target.value.replace(/\D/g, ''); 
-        
+        let value = target.value.replace(/\D/g, '');
+
         if (value.length > 0) {
           value = '(' + value;
         }
@@ -275,21 +291,24 @@ const cfTurnstileSiteKey = import.meta.env.PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
         if (value.length > 10) {
           value = value.substring(0, 10) + '-' + value.substring(10);
         }
-        
+
         if (value.length > 15) {
           value = value.substring(0, 15);
         }
-        
+
         target.value = value;
       });
     }
 
     const inputs = form.querySelectorAll('input, select, textarea');
-    
+
     inputs.forEach((input) => {
-      const field = input as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+      const field = input as
+        | HTMLInputElement
+        | HTMLSelectElement
+        | HTMLTextAreaElement;
       const fieldName = field.name;
-      
+
       if (fieldName && fieldName in validationRules) {
         field.addEventListener('blur', () => {
           validateField(field);
@@ -297,15 +316,19 @@ const cfTurnstileSiteKey = import.meta.env.PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
       }
     });
 
-    function validateField(field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) {
+    function validateField(
+      field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    ): boolean | undefined {
       const fieldName = field.name;
-      const rule = validationRules[fieldName as keyof typeof validationRules];
-      const messageElement = document.querySelector(`.validation-message[data-for="${fieldName}"]`);
-      
+      const rule = validationRules[fieldName];
+      const messageElement = document.querySelector(
+        `.validation-message[data-for="${fieldName}"]`
+      );
+
       if (!rule || !messageElement) return;
-      
+
       const isValid = rule.validate(field.value);
-      
+
       if (!isValid && field.value.trim() !== '') {
         messageElement.textContent = rule.message;
         messageElement.classList.remove('hidden');
@@ -315,43 +338,54 @@ const cfTurnstileSiteKey = import.meta.env.PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
         messageElement.classList.add('hidden');
         field.classList.remove('border-red-500');
       }
-      
-      return isValid ?? true;
+
+      return isValid;
     }
 
-    function validateAllFields() {
+    function validateAllFields(): boolean {
       let isValid = true;
-      
+
       inputs.forEach((input) => {
-        const field = input as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+        const field = input as
+          | HTMLInputElement
+          | HTMLSelectElement
+          | HTMLTextAreaElement;
         const fieldName = field.name;
-        
+
         if (fieldName && fieldName in validationRules) {
           const fieldValid = validateField(field);
-          isValid = fieldValid! && isValid;
+          if (fieldValid === false) {
+            isValid = false;
+          }
         }
       });
-      
+
       return isValid;
     }
 
     form.addEventListener('submit', (e) => {
+      e.preventDefault();
       const isValid = validateAllFields();
-      
+
       if (!isValid) {
-        e.preventDefault();
         return false;
       }
-      
-      const turnstileElement = document.getElementById('cfTurnstileResponse');
-      const turnstileResponse = turnstileElement ? (turnstileElement as HTMLInputElement).value : '';
+
+      const turnstileElement = document.getElementById(
+        'cfTurnstileResponse'
+      ) as HTMLInputElement;
+      const turnstileResponse = turnstileElement ? turnstileElement.value : '';
+
       if (!turnstileResponse) {
-        e.preventDefault();
         alert('Por favor, complete a verificação de segurança');
         return false;
       }
+
+      const formData = new FormData(form);
+      actions.contactSubmit(formData);
     });
   });
 </script>
 
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer
+></script>
