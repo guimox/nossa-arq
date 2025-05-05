@@ -29,7 +29,8 @@ const formSchema = z.object({
   ),
   message: z
     .string()
-    .min(10, { message: 'A mensagem deve ter pelo menos 10 caracteres.' }),
+    .min(10, { message: 'A mensagem deve ter pelo menos 10 caracteres.' })
+    .max(500, { message: 'A mensagem deve ter no máximo 500 caracteres.' }),
   cfTurnstileResponse: z
     .string()
     .min(1, { message: 'Verificação de segurança necessária' }),

@@ -10,7 +10,12 @@ import { join } from 'path';
 import { getPlaiceholder } from 'plaiceholder';
 import { readFile } from 'fs/promises';
 
-export const prerender = false;
+export function getStaticPaths() {
+  return itemsArq.map((item) => ({
+    params: { slug: item.link },
+    props: { project: item },
+  }));
+}
 
 const { slug } = Astro.params;
 
@@ -74,16 +79,18 @@ const getLocalImageWithPlaiceholder = async (relativePath: string) => {
 };
 
 const { css, img } = await getLocalImageWithPlaiceholder(
-  '1/' + itemsArq[0].images[0]
+  project.id + '/' + project.images[0]
 );
 ---
 
 <Layout link="portfolio">
-  <section class="content-grid mx-auto mt-20 space-y-50 py-12 bg-white">
+  <section class="content-grid mx-auto mt-20 space-y-50 bg-white py-12">
     <div class="mx-auto my-20 flex w-full flex-col justify-between md:flex-row">
       <div class="w-full">
         <Title>
-          {project.supertitle} {" "} {project.title}
+          {project.supertitle}
+          {' '}
+          {project.title}
         </Title>
         <p class="mt-6 text-lg text-gray-700">{project.subtitle}</p>
       </div>
@@ -96,30 +103,31 @@ const { css, img } = await getLocalImageWithPlaiceholder(
       </div>
     </div>
     <div class="h-fit w-full">
-   <div class="h-64 w-full relative">
-    <div
-    style={css}
-    class={cx(
-      'absolute',
-      'inset-0',
-      'w-full',
-      'h-full',
-      'transform',
-      'brightness-50',
-      'scale-150',
-      'filter',
-      'blur-2xl',
-      'z-[-1]'
-    )}
-  />
-    <Image
-      src={mainImage.src}
-      width={mainImage.attributes.width}
-      height={mainImage.attributes.height / 2}
-      alt={project.title}
-      class="h-64 w-full rounded-sm object-cover"
-    />
-   </div>
+      <div class="relative h-64 w-full">
+        <div
+          style={css}
+          class={cx(
+            'absolute',
+            'inset-0',
+            'w-full',
+            'h-full',
+            'transform',
+            'brightness-50',
+            'scale-150',
+            'filter',
+            'blur-2xl',
+            'z-[-1]'
+          )}
+        >
+        </div>
+        <Image
+          src={mainImage.src}
+          width={mainImage.attributes.width}
+          height={mainImage.attributes.height / 2}
+          alt={project.title}
+          class="h-64 w-full rounded-sm object-cover"
+        />
+      </div>
     </div>
     <div class="space-y-10">
       <div class="flex flex-col gap-20 lg:flex-row">

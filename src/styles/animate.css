@@ -33,7 +33,7 @@
   opacity: 1;
 }
 
-.content-grid :is(h1, h3, form):not(#projeto *) {
+.content-grid :is(h1, h3, form):not(#projeto *, #alert *) {
   opacity: 0;
   animation: fadeInUp 0.8s ease-out forwards;
 }
