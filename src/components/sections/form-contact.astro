@@ -1,6 +1,5 @@
 ---
 import Paragraph from '../typography/paragraph.astro';
-import { actions } from 'astro:actions';
 
 const cfTurnstileSiteKey = import.meta.env.PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
 
@@ -228,11 +227,46 @@ const errors: Record<string, string> = {};
 </script>
 
 <script>
-  import { actions } from 'astro:actions';
+  declare global {
+    interface Window {
+      turnstile?: {
+        reset: () => void;
+      };
+    }
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm') as HTMLFormElement;
-    if (!form) return;
+    const formContainer = form?.parentElement;
+    if (!form || !formContainer) return;
+
+    const loadingSpinner = document.createElement('div');
+    loadingSpinner.id = 'loadingSpinner';
+    loadingSpinner.className =
+      'hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    loadingSpinner.innerHTML = `
+    <div class="bg-white p-5 rounded-lg flex flex-col items-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-zinc-800 mb-3"></div>
+      <p class="text-zinc-800 font-medium">Enviando mensagem...</p>
+    </div>
+  `;
+    document.body.appendChild(loadingSpinner);
+
+    const successMessage = document.createElement('div');
+    successMessage.id = 'successMessage';
+    successMessage.className =
+      'hidden bg-green-50 border border-green-200 p-6 rounded-md shadow-sm';
+    successMessage.innerHTML = `
+    <div id="alert" class="flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <div>
+        <h3 class="text-lg font-medium text-green-800">Mensagem enviada com sucesso!</h3>
+        <p class="text-green-700 mt-1">Agradecemos seu contato. Responderemos o mais breve possível.</p>
+      </div>
+    </div>
+  `;
 
     interface ValidationRules {
       [key: string]: {
@@ -270,7 +304,7 @@ const errors: Record<string, string> = {};
       },
       message: {
         validate: (value: string) => {
-          return value.trim().length >= 10;
+          return value.trim().length >= 10 && value.trim().length <= 500;
         },
         message: 'Por favor, insira uma mensagem com pelo menos 10 caracteres',
       },
@@ -363,7 +397,60 @@ const errors: Record<string, string> = {};
       return isValid;
     }
 
-    form.addEventListener('submit', (e) => {
+    function showLoadingSpinner() {
+      const spinner = document.getElementById('loadingSpinner');
+      if (spinner) {
+        spinner.classList.remove('hidden');
+      }
+    }
+
+    function hideLoadingSpinner() {
+      const spinner = document.getElementById('loadingSpinner');
+      if (spinner) {
+        spinner.classList.add('hidden');
+      }
+    }
+
+    function showSuccessMessage() {
+      form.classList.add('hidden');
+
+      if (!formContainer!.contains(successMessage)) {
+        formContainer!.appendChild(successMessage);
+      }
+      successMessage.classList.remove('hidden');
+
+      const newMessageBtn = document.getElementById('newMessageBtn');
+      if (newMessageBtn) {
+        newMessageBtn.addEventListener('click', () => {
+          resetForm();
+          successMessage.classList.add('hidden');
+          form.classList.remove('hidden');
+        });
+      }
+    }
+
+    function resetForm() {
+      form.reset();
+
+      // Reset Cloudflare Turnstile if present
+      if (window.turnstile) {
+        window.turnstile.reset();
+      }
+
+      // Clear any validation messages
+      const validationMessages = document.querySelectorAll('.validation-message');
+      validationMessages.forEach((message) => {
+        message.textContent = '';
+        message.classList.add('hidden');
+      });
+
+      // Remove any red borders
+      inputs.forEach((input) => {
+        input.classList.remove('border-red-500');
+      });
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const isValid = validateAllFields();
 
@@ -381,8 +468,32 @@ const errors: Record<string, string> = {};
         return false;
       }
 
-      const formData = new FormData(form);
-      actions.contactSubmit(formData);
+      showLoadingSpinner();
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: formData,
+          headers: {
+            Accept: 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          hideLoadingSpinner();
+          showSuccessMessage();
+        } else {
+          hideLoadingSpinner();
+          alert(
+            'Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.'
+          );
+        }
+      } catch (error) {
+        hideLoadingSpinner();
+        alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.');
+        console.error('Form submission error:', error);
+      }
     });
   });
 </script>
