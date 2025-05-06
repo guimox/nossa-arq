@@ -46,42 +46,39 @@ const isLinkActive = (path: string) =>
         Contato
       </a>
     </nav>
-
     <button
-      class="group relative z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded p-1 md:hidden"
+      class="group relative z-50 flex h-10 w-10 items-center justify-center rounded md:hidden"
       aria-label="Toggle navigation menu"
       aria-expanded="false"
       aria-controls="mobile-menu"
       id="nav-toggle"
     >
       <span class="sr-only">Open main menu</span>
-      <div class="relative block h-full w-full">
+      <div class="flex h-3.5 w-6 flex-col justify-between">
         <span
           id="bar1"
           class:list={[
-            'absolute top-[calc(50%-6px)] left-1/2 block h-0.5 w-6 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
+            'block h-0.5 w-full transform rounded-full transition-all duration-300 ease-in-out',
             barColor,
-            'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:rotate-45',
+            'origin-right',
           ]}></span>
         <span
           id="bar2"
           class:list={[
-            'absolute top-1/2 left-1/2 block h-0.5 w-6 -translate-x-1/2 -translate-y-1/2 transform rounded-full transition-opacity duration-300 ease-in-out',
+            'block h-0.5 w-full transform rounded-full transition-opacity duration-300 ease-in-out',
             barColor,
-            'group-[.is-active]:opacity-0',
           ]}></span>
         <span
           id="bar3"
           class:list={[
-            'absolute top-[calc(50%+6px)] left-1/2 block h-0.5 w-6 -translate-x-1/2 transform rounded-full transition-all duration-300 ease-in-out',
+            'block h-0.5 w-full transform rounded-full transition-all duration-300 ease-in-out',
             barColor,
-            'group-[.is-active]:top-1/2 group-[.is-active]:-translate-y-1/2 group-[.is-active]:-rotate-45',
+            'origin-right',
           ]}></span>
       </div>
     </button>
   </div>
 
-  <!-- Mobile Menu -->
   <div
     id="mobile-menu"
     class:list={[

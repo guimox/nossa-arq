@@ -84,8 +84,10 @@ const { css, img } = await getLocalImageWithPlaiceholder(
 ---
 
 <Layout link="portfolio">
-  <section class="content-grid mx-auto mt-20 space-y-50 bg-white py-12">
-    <div class="mx-auto my-20 flex w-full flex-col justify-between md:flex-row">
+  <section
+    class="content-grid mx-auto w-full space-y-30 bg-white py-12 lg:mt-20 lg:space-y-50"
+  >
+    <div class="mx-auto my-15 flex w-full flex-col justify-between md:flex-row">
       <div class="w-full">
         <Title>
           {project.supertitle}
@@ -94,23 +96,25 @@ const { css, img } = await getLocalImageWithPlaiceholder(
         </Title>
         <p class="mt-6 text-lg text-gray-700">{project.subtitle}</p>
       </div>
-      <div class="flex flex-col justify-center gap-2 border-l bg-white p-6 md:w-2/3">
+      <div
+        class="my-10 flex flex-col justify-center gap-2 border-l bg-white p-4 md:w-2/3 md:p-6"
+      >
         <Paragraph><span class="font-bold">Tipo:</span> {project.tipo}</Paragraph>
         <Paragraph
-          ><span class="font-bold">Tamanho:</span> {project.tamanho}m²</Paragraph
+          ><span class="font-bold">Tamanho:</span> {project.tamanho}</Paragraph
         >
         <Paragraph><span class="font-bold">Ano:</span> {project.ano}</Paragraph>
       </div>
     </div>
     <div class="h-fit w-full">
-      <div class="relative h-64 w-full">
+      <div class="relative h-64 w-full overflow-hidden">
         <div
           style={css}
           class={cx(
             'absolute',
             'inset-0',
             'w-full',
-            'h-full',
+            'h-64',
             'transform',
             'brightness-50',
             'scale-150',

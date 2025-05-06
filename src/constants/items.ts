@@ -22,17 +22,7 @@ export const itemsArq = [
     ano: '2025',
     tamanho: '6 torres com 32 UHs/cada',
     tipo: 'Conjunto residencial',
-    projeto: `Na busca por um projeto habitação coletiva acessível com qualidade arquitetônica e
-proximidade com a natureza, o conjunto de seis torres residenciais aposta na modulação
-como lógica compositiva para criar ritmo e movimento no conjunto, enquanto garante ainda
-alta replicabilidade e custos de produção reduzidos. A implantação sobre pilotis permite
-fluidez visual e uma fruição contínua entre os blocos, conectados por pátios internos que se
-configuram como espaços de convivência e lazer ao ar livre. A escolha pelo uso de brises
-móveis e a padronização de elementos construtivos e de vedação garantem conforto
-ambiental, agilidade de execução e economia no empreendimento. Graças à solução
-padronizada, o projeto permite a construção em fases, produzindo de maneira gradual cada
-uma das 6 torres, que abrigam 32 unidades do tipo studio, com 25m2 de área privativa cada,
-distribuídas ao longo de quatro pavimentos.`,
+    projeto: `Na busca por um projeto habitação coletiva acessível com qualidade arquitetônica e proximidade com a natureza, o conjunto de seis torres residenciais aposta na modulação como lógica compositiva para criar ritmo e movimento no conjunto, enquanto garante ainda alta replicabilidade e custos de produção reduzidos. A implantação sobre pilotis permite fluidez visual e uma fruição contínua entre os blocos, conectados por pátios internos que se configuram como espaços de convivência e lazer ao ar livre. A escolha pelo uso de brises móveis e a padronização de elementos construtivos e de vedação garantem conforto ambiental, agilidade de execução e economia no empreendimento. Graças à solução padronizada, o projeto permite a construção em fases, produzindo de maneira gradual cada uma das 6 torres, que abrigam 32 unidades do tipo studio, com 25m2 de área privativa cada, distribuídas ao longo de quatro pavimentos.`,
     tags: ['Habitação coletiva', 'Condominio'],
   },
   {
@@ -44,14 +34,34 @@ distribuídas ao longo de quatro pavimentos.`,
     ano: '2025',
     tamanho: '8 pavimentos e 1 ático',
     tipo: 'Habitação coletiva',
-    projeto: `Com oito pavimentos e uma composição formal cuidadosamente estudada, o edifício
-residencial se destaca pela personalidade arquitetônica e pelo aproveitamento pleno de seu
-potencial construtivo. A base comercial ativa integra o empreendimento à vida urbana,
-enquanto os terraços descobertos e as áreas comuns no ático — com piscina, salão de
-festas e solarium — oferecem lazer e bem-estar aos moradores. O resultado é um projeto
-que equilibra valorização imobiliária, qualidade de vida e presença marcante na paisagem
-da cidade.`,
+    projeto: `Com oito pavimentos e uma composição formal cuidadosamente estudada, o edifício residencial se destaca pela personalidade arquitetônica e pelo aproveitamento pleno de seu potencial construtivo. A base comercial ativa integra o empreendimento à vida urbana, enquanto os terraços descobertos e as áreas comuns no ático — com piscina, salão de festas e solarium — oferecem lazer e bem-estar aos moradores. O resultado é um projeto que equilibra valorização imobiliária, qualidade de vida e presença marcante na paisagem da cidade.`,
     link: 'mansao-vista-mar',
     tags: ['Habitação coletiva', 'Habitação vertical'],
+  },
+  {
+    id: '4',
+    supertitle: 'Edifício',
+    title: 'Ybirá',
+    subtitle: 'Conexão, Conforto e Movimento',
+    images: ['image1.png'],
+    link: 'edificio-ybira',
+    ano: '2025',
+    tamanho: '32 pavimentos + ático',
+    tipo: 'Prédio Multifuncional',
+    projeto: `Com 32 pavimentos, este edifício multifuncional explora ao máximo as potencialidades do lote, aproveitando-se da volumetria escalonada para garantir melhor insolação às unidades residenciais, enquanto a rotação intermitente dos pavimentos cria sacadas cobertas que ampliam a relação entre interior e exterior, oferecendo conforto ambiental e visuais panorâmicos da cidade. A articulação entre forma, materialidade, luz e sombra potencializa a vivência cotidiana dos usuários, respeitando a diversidade de modos de habitar. Com embasamento comercial e áreas de recreação distribuídas entre o 4º, 13º pavimento e ático, o projeto estabelece uma conexão dinâmica e sensível com o entorno urbano, além de promover integração urbana por meio de fachadas ativas e da ocupação contínua do empreendimento ao longo do dia.`,
+    tags: ['Multifuncional', 'Habitação coletiva', 'Vertical'],
+  },
+  {
+    id: '5',
+    supertitle: 'Casa',
+    title: 'Aurora',
+    subtitle: 'luz, conexão, conforto',
+    images: ['image1.png'],
+    link: 'casa-aurora',
+    ano: '2025',
+    tamanho: 'Lote de 265m² (22x12,5m)',
+    tipo: 'Projeto de Interiores',
+    projeto: `O projeto, implantado em um lote de 265m² com área construída de 165m², contempla duas suítes de casal e uma suíte de solteiro, todas com acesso a jardins privativos voltados para a face leste, assegurando iluminação natural abundante nas manhãs e ventilação cruzada constante, que favorecem a contemplação e a privacidade. A área social integra estar, jantar, cozinha e espaço gourmet externo com jardim de inverno, compondo um ambiente fluido e naturalmente iluminado e ventilado ao longo do dia, o que proporciona conforto térmico durante todas as estações e reduz a dependência de sistemas artificiais de climatização. A cozinha planejada foi concebida com foco na escala humana, promovendo experiências que transcendem o espaço físico, aliando funcionalidade e estética para valorizar o cotidiano com praticidade e beleza. O programa se completa com uma vaga de garagem coberta e áreas de serviço discretamente posicionadas, garantindo organização e eficiência. Assim, alcança-se uma proposta compacta e ambientalmente qualificada, plenamente ajustada às necessidades do cliente e às dimensões do lote.`,
+    tags: ['Residencial', 'Interiores'],
   },
 ];
