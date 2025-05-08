@@ -74,7 +74,8 @@ const { css, img } = await getLocalImageWithPlaiceholder(
         'blur-2xl',
         'z-[-1]'
       )}
-    />
+    >
+    </div>
     <div id="slideImages" class="relative h-screen">
       {
         slides.map((slide, index) => (
@@ -105,23 +106,23 @@ const { css, img } = await getLocalImageWithPlaiceholder(
     </div>
 
     <div
-      class="absolute inset-0 z-10 mx-auto flex max-w-[1700px] flex-col items-start justify-center gap-4 px-[1rem] py-2 md:gap-4 lg:px-0"
+      class="absolute inset-0 z-10 mx-auto flex h-3/4 max-w-[1700px] flex-col items-start justify-center gap-4 px-[1rem] py-2 md:gap-4 lg:h-full lg:px-0"
       id="slideTitles"
     >
       {
         slides.map((slide, index) => (
           <div
-            class={`space-y-5 transition-opacity duration-700 ease-in-out ${index === 0 ? 'relative opacity-100' : 'invisible absolute opacity-0'}`}
+            class={`flex flex-col space-y-5 transition-opacity duration-700 ease-in-out ${index === 0 ? 'relative opacity-100' : 'invisible absolute opacity-0'}`}
             data-index={index}
           >
             <div class="space-y-2 tracking-wide">
               {slide.titles.map((title) => (
-                <h2 class="text-7xl font-bold text-white lg:text-8xl">{title}</h2>
+                <h2 class="text-6xl font-bold text-white lg:text-8xl">{title}</h2>
               ))}
             </div>
             <a
               href={'/portfolio/' + slide.link}
-              class="inline-block text-white underline underline-offset-8 transition-opacity hover:opacity-75"
+              class="mt-5 inline-block text-white underline underline-offset-8 transition-opacity hover:opacity-75 md:mt-0"
             >
               Ver projeto
             </a>
@@ -130,9 +131,9 @@ const { css, img } = await getLocalImageWithPlaiceholder(
       }
     </div>
     <div
-      class="absolute right-0 bottom-0 left-0 z-20 mx-auto flex w-full max-w-[1700px] flex-col-reverse items-start justify-between gap-10 px-[1rem] py-8 font-medium text-white md:flex-row md:items-center lg:px-0"
+      class="absolute right-0 bottom-20 left-0 z-20 mx-auto flex w-full max-w-[1700px] flex-col-reverse items-start justify-between gap-10 px-[1rem] py-8 font-medium text-white md:bottom-0 md:flex-row md:items-center lg:px-0"
     >
-      <Paragraph class="max-w-2xl border-b border-l p-8 text-sm md:text-base">
+      <Paragraph class="max-w-2xl">
         Autoral, brasileira e contemporânea — projetos que traduzem identidade,
         pertencimento e beleza em cada detalhe.
       </Paragraph>
@@ -140,7 +141,7 @@ const { css, img } = await getLocalImageWithPlaiceholder(
         {
           slides.map((slide, index) => (
             <button
-              class={`h-5 w-5 cursor-pointer bg-white transition-all duration-300 md:h-6 md:w-6 ${index === 0 ? 'scale-110 opacity-100' : 'opacity-50 hover:opacity-75'}`}
+              class={`h-3 w-3 cursor-pointer rounded-sm bg-white transition-all duration-300 md:h-4 md:w-4 ${index === 0 ? 'scale-110 opacity-100' : 'opacity-50 hover:opacity-75'}`}
               data-index={index}
               aria-label={`Ver slide ${index + 1}: ${slide.titles.join(' ')}`}
             />
@@ -240,7 +241,7 @@ const { css, img } = await getLocalImageWithPlaiceholder(
       if (slideInterval) {
         clearInterval(slideInterval);
       }
-      slideInterval = setInterval(nextSlide, 5000);
+      slideInterval = setInterval(nextSlide, 15000); // 15 seconds
     };
 
     const stopAutoSlide = () => {

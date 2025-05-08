@@ -108,8 +108,16 @@ const allItems = itemsArq;
       const noProjectsMessage = document.getElementById('no-projects-message');
       const noProjectsTagNameSpan = document.getElementById('no-projects-tag-name');
 
+      const validTags = Array.from(allTagLinks).map((link) => link.dataset.tag);
+
       function getTagFromUrl() {
         const params = new URLSearchParams(window.location.search);
+
+        if (tag !== 'todos' && !validTags.includes(tag)) {
+          window.location.href = '/projetos';
+          return 'todos';
+        }
+
         return params.get('tag')?.toLowerCase() || 'todos';
       }
 

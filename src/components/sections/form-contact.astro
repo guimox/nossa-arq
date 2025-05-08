@@ -33,7 +33,7 @@ const errors: Record<string, string> = {};
       name="name"
       placeholder="Seu nome completo"
       required
-      class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+      class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
     />
     <span class="validation-message mt-1 hidden text-sm text-red-600" data-for="name"
     ></span>
@@ -55,7 +55,7 @@ const errors: Record<string, string> = {};
       placeholder="seu.email@exemplo.com"
       value={formData.email}
       required
-      class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+      class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
     />
     <span
       class="validation-message mt-1 hidden text-sm text-red-600"
@@ -78,7 +78,7 @@ const errors: Record<string, string> = {};
       placeholder="(00) 00000-0000"
       value={formData.phone}
       required
-      class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+      class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
     />
     <span
       class="validation-message mt-1 hidden text-sm text-red-600"
@@ -98,7 +98,7 @@ const errors: Record<string, string> = {};
       id="projectType"
       name="projectType"
       required
-      class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm invalid:text-[#9e9eae] focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+      class="w-full rounded-md border border-gray-300 px-3 py-2 invalid:text-[#9e9eae] focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
     >
       <option value="" disabled selected={!formData.projectType}>Selecione</option>
       <option
@@ -177,7 +177,7 @@ const errors: Record<string, string> = {};
       name="message"
       placeholder="Digite sua mensagem aqui"
       required
-      class="min-h-32 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
+      class="min-h-32 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500 focus:outline-none"
       >{formData.message}</textarea
     >
     <span
@@ -255,7 +255,7 @@ const errors: Record<string, string> = {};
     const successMessage = document.createElement('div');
     successMessage.id = 'successMessage';
     successMessage.className =
-      'hidden bg-green-50 border border-green-200 p-6 rounded-md shadow-sm';
+      'hidden bg-green-50 border border-green-200 p-6 rounded-md ';
     successMessage.innerHTML = `
     <div id="alert" class="flex items-center">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
