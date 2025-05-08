@@ -4,22 +4,33 @@ const circleColor = isHomePage ? 'border-white' : 'border-zinc-500';
 ---
 
 <div
-  class={`custom-cursor ${circleColor} pointer-events-none fixed top-0 left-0 z-20 h-10 w-10 rounded-full border transition-transform duration-75`}
+  class={`custom-cursor ${circleColor} pointer-events-none fixed top-0 left-0 z-50 h-10 w-10 rounded-full border transition-transform duration-75 hidden md:block`}
 >
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const cursor = document.querySelector('.custom-cursor') as HTMLElement;
+    const isMobileDevice = () => {
+      return (
+        window.matchMedia('(max-width: 768px)').matches ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      );
+    };
 
-    if (cursor) {
-      const moveCursor = (e: MouseEvent) => {
-        const x = e.clientX;
-        const y = e.clientY;
-        cursor.style.transform = `translate(${x - 12}px, ${y - 12}px)`;
-      };
+    if (!isMobileDevice()) {
+      const cursor = document.querySelector('.custom-cursor') as HTMLElement;
 
-      window.addEventListener('mousemove', moveCursor);
+      if (cursor) {
+        const moveCursor = (e: MouseEvent) => {
+          const x = e.clientX;
+          const y = e.clientY;
+          cursor.style.transform = `translate(${x - 12}px, ${y - 12}px)`;
+        };
+
+        window.addEventListener('mousemove', moveCursor);
+      }
     }
   });
 </script>
