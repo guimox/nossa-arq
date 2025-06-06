@@ -5,14 +5,40 @@ const instagram = 'https://instagram.com/nossa.arq';
 const email = 'contato@nossaarquitetura.com';
 import { Image } from 'astro:assets';
 import imageBackground from '../../assets/1/image1.png';
+import { getPlaiceholder } from 'plaiceholder';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
+
+// Add plaiceholder implementation
+const getLocalImageWithPlaiceholder = async (imageSrc: ImageMetadata) => {
+  const absolutePath = join(process.cwd(), 'src/assets/1/image1.png');
+  const buffer = await readFile(absolutePath);
+
+  const {
+    metadata: { height, width },
+    ...plaiceholder
+  } = await getPlaiceholder(buffer, { size: 10 });
+
+  return {
+    ...plaiceholder,
+    img: { src: imageSrc, height, width },
+  };
+};
+
+const { css, img } = await getLocalImageWithPlaiceholder(imageBackground);
 ---
 
 <div class="fixed inset-0 flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0 z-0 h-full w-full">
+    <div
+      style={css}
+      class="absolute inset-0 z-0 h-full w-full scale-125 transform opacity-40 blur-xl brightness-50 filter"
+    >
+    </div>
     <Image
       src={imageBackground}
       alt="Background"
-      class="h-full w-full object-cover brightness-20"
+      class="relative z-10 h-full w-full object-cover brightness-20"
       loading="eager"
     />
   </div>

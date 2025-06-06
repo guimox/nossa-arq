@@ -66,7 +66,6 @@ const errors: Record<string, string> = {};
       )
     }
   </div>
-
   <div>
     <label for="phone" class="mb-1 block text-sm font-medium text-gray-700">
       Telefone
@@ -89,7 +88,6 @@ const errors: Record<string, string> = {};
       )
     }
   </div>
-
   <div>
     <label for="projectType" class="mb-1 block text-sm font-medium text-gray-700">
       Tipo de projeto
@@ -167,7 +165,6 @@ const errors: Record<string, string> = {};
       )
     }
   </div>
-
   <div>
     <label for="message" class="mb-1 block text-sm font-medium text-gray-700">
       Mensagem
@@ -189,7 +186,6 @@ const errors: Record<string, string> = {};
       )
     }
   </div>
-
   <div
     class="cf-turnstile"
     data-sitekey={cfTurnstileSiteKey}
@@ -202,7 +198,6 @@ const errors: Record<string, string> = {};
     id="cfTurnstileResponse"
     value=""
   />
-
   {
     errors.cfTurnstileResponse && (
       <Paragraph class="mt-1 text-sm text-red-600">
@@ -210,7 +205,6 @@ const errors: Record<string, string> = {};
       </Paragraph>
     )
   }
-
   <button
     type="submit"
     class="w-fit rounded-md bg-zinc-800 px-4 py-1 font-medium text-white transition duration-200 hover:cursor-pointer hover:opacity-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
