@@ -9,13 +9,15 @@ import Paragraph from '../components/typography/paragraph.astro';
 ---
 
 <Layout link="sobre">
-  <section class="content-grid mt-20 space-y-20 text-zinc-700 md:mt-40">
+  <section
+    class="mx-auto mt-20 max-w-[1700px] space-y-20 px-4 text-zinc-700 md:mt-40 lg:px-8"
+  >
     <div
       class="flex flex-col-reverse items-start justify-between gap-5 md:flex-row md:items-center"
     >
       <Heading>
         <Title>Sobre nós</Title>
-        <Subtitle> Nossa arquitetura é a sua também. </Subtitle>
+        <Subtitle> Nossa arquitetura é a sua também</Subtitle>
       </Heading>
       <div class="flex items-center gap-4">
         <div class="h-[3rem] w-[3rem] bg-gray-500"></div>
@@ -59,7 +61,7 @@ import Paragraph from '../components/typography/paragraph.astro';
 
     <div class="full-width bg-zinc-300">
       <div
-        class="mx-auto flex w-full flex-col items-center gap-5 py-10 lg:flex-row lg:gap-20"
+        class="mx-auto flex w-full flex-col items-center gap-5 px-4 py-10 lg:flex-row lg:gap-20 lg:px-8"
       >
         <Image
           src={image1}
