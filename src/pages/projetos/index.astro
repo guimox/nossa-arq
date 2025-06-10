@@ -127,9 +127,7 @@ const allItems = itemsArq;
         allTagLinks.forEach((link) => {
           const linkTag = link.dataset.tag;
           const isActive = linkTag === activeTagIdentifier;
-          link.classList.toggle('bg-zinc-800', isActive);
-          link.classList.toggle('text-white', isActive);
-          link.classList.toggle('border-zinc-200', !isActive);
+          link.classList.toggle('bg-zinc-100', isActive);
           link.classList.toggle('bg-white', !isActive);
           link.classList.toggle('hover:bg-zinc-100', !isActive);
           link.setAttribute('aria-current', isActive ? 'page' : 'false');
